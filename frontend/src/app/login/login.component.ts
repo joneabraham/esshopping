@@ -50,6 +50,8 @@ export class LoginComponent {
       this.router.navigate(['login']);
     }, remainingTime);
   }
+
+  
   onsubmit(form: NgForm) {
     this.sub();
 

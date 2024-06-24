@@ -34,7 +34,7 @@ export class ProductdetailsComponent implements OnInit, OnChanges {
   
   checkout(amount:any){
     const id = this.route.snapshot.paramMap.get('id'); 
-    // confirm("Are you sure you want to checkout?");
+    confirm("Are you sure you want to checkout?");
     console.log("checkout button clicked")
     Swal.fire({
       title: 'Are you sure you want to Checkout?',
@@ -97,11 +97,11 @@ export class ProductdetailsComponent implements OnInit, OnChanges {
     console.log("products from server" , this.products)
 
     
-    // this.filteredObjects = this.service.product.filter((product: any) => {
-    //   return this.products.every((newproduct:any) => {
-    //     return product.Product_ID === parseInt(newproduct.product_id);
-    //   });
-    // });
+    this.filteredObjects = this.service.product.filter((product: any) => {
+      return this.products.every((newproduct:any) => {
+        return product.Product_ID === parseInt(newproduct.product_id);
+      });
+    });
   this.products.forEach((product: any) => {
   const matchingProducts = this.service.product.filter((newproduct: any) => {
     return newproduct.Product_ID === parseInt(product.product_id);
