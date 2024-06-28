@@ -16,7 +16,7 @@
                     data-mdb-ripple-color="light"
                   >
                     <img
-                      src="{{ prod.Thumbnail }}"
+                      src="{{ prod.Product_Image }}"
                       class="w-100"
                       alt="Blue Jeans Jacket"
                     />
@@ -31,7 +31,7 @@
 
                 <div class="col-lg-5 col-md-6 mb-4 mb-lg-0" id="vt">
                   <p>
-                    <strong>{{ prod.Name }}</strong>
+                    <strong>{{ prod.Product_Name }}</strong>
                   </p>
                   <p>Color: blue</p>
                   <p>Size: M</p>
@@ -70,7 +70,7 @@
                         min="1"
                         
                         name="quantity"
-                        [(ngModel)]="prod.itemcount"
+                        [(ngModel)]="prod.Product_Quantity"
                         type="number"
                         class="form-control"
                       />
@@ -85,10 +85,10 @@
                       <i class="fas fa-plus"></i> +
                     </button>
                   </div>
-                  <button id="blah" type="button" class="btn btn-danger" (click)="remove(prod.Product_ID)">Remove</button>
+                  <button id="blah" type="button" class="btn btn-danger" (click)="remove(prod.Product_Id)">Remove</button>
                 </div>
                   <p class="text-start text-md-center">
-                    <strong>Rs {{(prod.Price) * (prod.itemcount || 1) }}</strong>
+                    <strong>Rs {{(prod.Product_Price) * (prod.Product_Quantity || 1) }}</strong>
                   </p>
                 </div>
               </div>

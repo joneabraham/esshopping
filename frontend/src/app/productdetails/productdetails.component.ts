@@ -26,6 +26,7 @@ export class ProductdetailsComponent implements OnInit, OnChanges {
   totalamount:number=0;
   aftership:any;
   newObject: any[] = [];
+  allProducts: any[] = [];
   constructor(private pro:ProductreduceService, private service:Productservice, private router:Router , private route:ActivatedRoute, private http:HttpClient) { }
   
   ngOnChanges(): void {
@@ -61,10 +62,10 @@ export class ProductdetailsComponent implements OnInit, OnChanges {
  
   decrement(item: any) {
     
-    if (!item.itemcount) {
-      item.itemcount = 1;
+    if (!item.Product_Quantity) {
+      item.Product_Quantity = 1;
     } else {
-      item.itemcount = parseInt(item.itemcount) + 1;
+      item.Product_Quantity = parseInt(item.Product_Quantity) + 1;
       this.calculateTotal();
 
     }
@@ -72,8 +73,8 @@ export class ProductdetailsComponent implements OnInit, OnChanges {
   
   increment(item: any) {
     
-    if (item.itemcount && item.itemcount > 0) {
-      item.itemcount = parseInt(item.itemcount) - 1;
+    if (item.Product_Quantity && item.Product_Quantity > 0) {
+      item.Product_Quantity = parseInt(item.Product_Quantity) - 1;
       this.calculateTotal();
 
 
@@ -83,7 +84,7 @@ export class ProductdetailsComponent implements OnInit, OnChanges {
  calculateTotal(){
   this.totalamount=0;
   for(let prod of this.filteredObjects){
-    this.totalamount+=prod.Price*prod.itemcount;
+    this.totalamount+=prod.Product_Price*prod.Product_Quantity;
     this.aftership=this.totalamount+50;
   }
  }
@@ -96,19 +97,27 @@ export class ProductdetailsComponent implements OnInit, OnChanges {
     this.length=this.products.length;
     console.log("products from server" , this.products)
 
-    
-    this.filteredObjects = this.service.product.filter((product: any) => {
-      return this.products.every((newproduct:any) => {
-        return product.Product_ID === parseInt(newproduct.product_id);
+    this.http.get('http://localhost:3000/getproductsfromadmin')
+    .subscribe((res:any)=>{
+      this.allProducts=res;
+      this.filteredObjects = this.allProducts.filter((product: any) => {      
+        return this.products.some((newproduct:any) => {
+          return product.Product_Id === newproduct.product_id;
+        });
       });
-    });
-  this.products.forEach((product: any) => {
-  const matchingProducts = this.service.product.filter((newproduct: any) => {
-    return newproduct.Product_ID === parseInt(product.product_id);
-  });
-  this.filteredObjects.push(...matchingProducts);
+    this.calculateTotal()      
+    // this.products.forEach((product: any) => {
+    // const matchingProducts = this.allProducts.filter((newproduct: any) => {
+      
+    //   return newproduct.Product_ID === parseInt(product.product_id);
+    // });
+    // this.filteredObjects.push(...matchingProducts);
+    // }, (err:any)=>{
+    //   console.log("error from server", err)
+    // })
+
+  
 });
-console.log("filtered  products",this.filteredObjects);
 
 interface Product {
   Product_ID: number;

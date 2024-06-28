@@ -36,8 +36,8 @@ export class OrdersComponent implements OnInit {
        
         this.updatedProd = this.pr.map((item:any) => {
         const filteredProducts = item.products.map((product:any) => {
-          const matchedProduct = this.service.product.find(
-            (serviceProduct) => serviceProduct.Product_ID === product.productId
+          const matchedProduct = this.pr.find(
+            (serviceProduct:any) => serviceProduct.Product_ID === product.productId
           );
       
           return matchedProduct || product;

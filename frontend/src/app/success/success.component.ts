@@ -44,7 +44,7 @@ export class SuccessComponent implements OnInit {
       this.SendRequest(this.newp)
 
       console.log("newp",this.newp);
-      this.filteredproducts= this.service.product.filter((item)=> {
+      this.filteredproducts= this.products.filter((item:any)=> {
        return  this.newp.some((element:any) => {
           return item.Product_ID==element.productId;
         }); 

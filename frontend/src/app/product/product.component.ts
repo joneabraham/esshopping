@@ -89,6 +89,8 @@ export class ProductComponent implements DoCheck , OnInit {
   btnclick: boolean = true;
  
   buy(id: number, stock: number) {
+    console.log(id);
+    
     if (stock<=0) {
         this.toastr.error("Product is not available");
       return;
