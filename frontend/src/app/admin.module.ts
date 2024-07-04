@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AdminRoutingModule } from './admin-routing.module';
+import { ChartModule } from 'primeng/chart';
 @NgModule({
   declarations: [
     AdminloginComponent,
@@ -16,6 +17,6 @@ import { AdminRoutingModule } from './admin-routing.module';
     EditproductsComponent,
     AdminpaymentComponent,
   ],
-  imports: [RouterModule, CommonModule, FormsModule, AdminRoutingModule],
+  imports: [RouterModule, CommonModule, FormsModule, AdminRoutingModule, ChartModule],
 })
 export class AdminModule {}

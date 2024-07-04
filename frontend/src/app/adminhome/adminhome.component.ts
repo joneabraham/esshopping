@@ -3,6 +3,7 @@ import { Component ,OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-adminhome',
   templateUrl: './adminhome.component.html',
@@ -13,6 +14,9 @@ export class AdminhomeComponent implements OnInit {
   payment:any;
   search:string='';
   length:any;
+  data: any;
+  options: any;
+  
 constructor(private http:HttpClient, private router:Router, private toastr:ToastrService){
 
 }
@@ -30,15 +34,70 @@ getProduct(){
       }
       return count
     },0)
-    console.log("products sold", this.payment)
     console.log(this.products)
+    const documentStyle = getComputedStyle(document.documentElement);
+      const textColor = documentStyle.getPropertyValue('--text-color');
+      const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+      const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+      // this.apiService.getReturn(`${environment.BASE_API_URL}/project/${this.projectId}/billing-history`).subscribe((data)=>{
+      //   this.billingHistories = data.reverse()
+      const labels = this.products.map(product => product.Product_Name);
+      const amounts = this.products.map(product => product.Product_Discount);
+      
+        const colors = this.generateColors(amounts.length);
+
+        this.data = {  
+          labels: labels,
+          datasets: [
+            {
+              label: 'Discount',
+              data: amounts,
+              backgroundColor: colors.backgroundColors,
+              borderColor: colors.borderColors,
+              borderWidth: 1
+            }
+          ]
+        };
+      // });
+
+      this.options = {
+        plugins: {
+            legend: {
+                labels: {
+                    color: textColor
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            },
+            x: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder,
+                    drawBorder: false
+                }
+            }
+        }
+    };
   }, (err:any)=>{
     console.log("error from server", err)
   })
 }
 ngOnInit(): void {
   this.getProduct();
-  console.log(this.search)
+      
 }
 
 delete(id:any){
@@ -80,5 +139,28 @@ edit(id:any){
   confirm("Are you sure you want to edit the product");
   this.router.navigate(['admin', 'login', 'home', 'editproducts'],
   {queryParams: {Product_Id} })
+}
+
+generateColors(count: number) {
+  const backgroundColors = [];
+  const borderColors = [];
+  
+  for (let i = 0; i < count; i++) {
+    const color = this.getRandomColor();
+    backgroundColors.push(color.backgroundColor);
+    borderColors.push(color.borderColor);
+  }
+  
+  return { backgroundColors, borderColors };
+}
+
+getRandomColor() {
+  const r = Math.floor(Math.random() * 255);
+  const g = Math.floor(Math.random() * 255);
+  const b = Math.floor(Math.random() * 255);
+  const backgroundColor = `rgba(${r}, ${g}, ${b}, 0.2)`;
+  const borderColor = `rgba(${r}, ${g}, ${b}, 1)`;
+  
+  return { backgroundColor, borderColor };
 }
 }
