@@ -1,232 +1,153 @@
-import { Component, DoCheck, OnChanges, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Productservice } from '../service/products.service';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
-import { ProductreduceService } from '../service/productreduce.service';
+
+interface CartLine {
+  Product_Id: string;
+  Product_Name: string;
+  Product_Image: string;
+  Product_Price: number;
+  stock: number;
+  qty: number;
+}
+
+const SHIPPING = 50;
+
 @Component({
   selector: 'app-productdetails',
   templateUrl: './productdetails.component.html',
   styleUrls: ['./productdetails.component.css']
 })
-export class ProductdetailsComponent implements OnInit, OnChanges {
-  productid:any;
-  productprice:number=0;
-  product:any;
-  msg:string="";
-  token:any;
-  cookieValue:any;
-  no:number=1;
-  length:any;
-  display:boolean=false;
-  products:any;
-  filteredObjects:any=[];
-  orderedproducts:any;
-  empty:boolean=false;
-  totalamount:number=0;
-  aftership:any;
-  newObject: any[] = [];
-  allProducts: any[] = [];
-  constructor(private pro:ProductreduceService, private service:Productservice, private router:Router , private route:ActivatedRoute, private http:HttpClient) { }
-  
-  ngOnChanges(): void {
-    this.calculateTotal();
+export class ProductdetailsComponent implements OnInit {
+  items: CartLine[] = [];
+  loading = true;
+  empty = false;
+  readonly shipping = SHIPPING;
+
+  constructor(private router: Router, private route: ActivatedRoute, private http: HttpClient) {}
+
+  ngOnInit() {
+    this.getCartProducts();
   }
-  
-  checkout(amount:any){
-    const id = this.route.snapshot.paramMap.get('id'); 
-    console.log("checkout button clicked")
-    Swal.fire({
-      title: 'Go to payment?',
-      text: 'You will pay ₹' + amount + ' through Razorpay.',
-      showCancelButton: true,
-      confirmButtonText: 'Continue to payment',
-    
-    }).then((result) => {
-      if (result.isConfirmed) {
-    if(window.location.pathname=="/login/cart"){
-       this.router.navigate(['login', 'cart' , 'checkout'],{
-      queryParams: {
-        amount: amount,
-        products: JSON.stringify(this.newObject)
-       }});
-       return;
-    }
-    this.router.navigate(['login','products', 'buy',id, 'checkout'], {
-      queryParams: {
-        amount: amount,
-        products: JSON.stringify(this.newObject)
+
+  get itemCount(): number {
+    return this.items.reduce((n, i) => n + i.qty, 0);
+  }
+
+  get subtotal(): number {
+    return this.items.reduce((sum, i) => sum + i.Product_Price * i.qty, 0);
+  }
+
+  get total(): number {
+    return this.subtotal + SHIPPING;
+  }
+
+  getCartProducts() {
+    this.http.get('http://localhost:3000/getCart').subscribe({
+      next: (cart: any) => {
+        const cartItems: any[] = Object.values(cart || {});
+        this.http.get('http://localhost:3000/getproductsfromadmin').subscribe({
+          next: (all: any) => {
+            const products: any[] = all || [];
+            this.items = cartItems
+              .map(c => {
+                const p = products.find(x => String(x.Product_Id) === String(c.product_id));
+                if (!p) { return null; }
+                const stock = Number(p.Product_Quantity) || 0;
+                return {
+                  Product_Id: p.Product_Id,
+                  Product_Name: p.Product_Name,
+                  Product_Image: p.Product_Image,
+                  Product_Price: Number(p.Product_Price) || 0,
+                  stock,
+                  qty: Math.max(1, Number(c.quantity) || 1)
+                } as CartLine;
+              })
+              .filter((x): x is CartLine => !!x);
+            this.empty = this.items.length === 0;
+            this.loading = false;
+          },
+          error: () => { this.loading = false; }
+        });
+      },
+      error: (err: any) => {
+        console.log('error loading cart', err);
+        this.loading = false;
       }
     });
-  }}); 
   }
- 
-  decrement(item: any) {
-    
-    if (!item.Product_Quantity) {
-      item.Product_Quantity = 1;
-    } else {
-      item.Product_Quantity = parseInt(item.Product_Quantity) + 1;
-      this.calculateTotal();
 
+  increase(item: CartLine) {
+    if (item.qty >= item.stock) {
+      this.toast('info', `Only ${item.stock} in stock`);
+      return;
     }
+    this.setQuantity(item, item.qty + 1);
   }
-  
-  increment(item: any) {
-    
-    if (item.Product_Quantity && item.Product_Quantity > 0) {
-      item.Product_Quantity = parseInt(item.Product_Quantity) - 1;
-      this.calculateTotal();
 
-
-    }
+  decrease(item: CartLine) {
+    if (item.qty <= 1) { return; }
+    this.setQuantity(item, item.qty - 1);
   }
-   
- calculateTotal(){
-  this.totalamount=0;
-  for(let prod of this.filteredObjects){
-    this.totalamount+=prod.Product_Price*prod.Product_Quantity;
-    this.aftership=this.totalamount+50;
+
+  onQuantityTyped(item: CartLine, value: any) {
+    const n = parseInt(value, 10);
+    if (!Number.isInteger(n) || n < 1) { this.setQuantity(item, 1); return; }
+    this.setQuantity(item, Math.min(n, item.stock));
   }
- }
 
-  getCartProducts(){
-    this.http.get('http://localhost:3000/getCart').subscribe((res: any) => {
-
-    console.log("products get from server");
-    this.products = Object.values(res);
-    this.length=this.products.length;
-    console.log("products from server" , this.products)
-
-    this.http.get('http://localhost:3000/getproductsfromadmin')
-    .subscribe((res:any)=>{
-      this.allProducts=res;
-      this.filteredObjects = this.allProducts.filter((product: any) => {      
-        return this.products.some((newproduct:any) => {
-          return product.Product_Id === newproduct.product_id;
-        });
-      });
-    this.calculateTotal()      
-    // this.products.forEach((product: any) => {
-    // const matchingProducts = this.allProducts.filter((newproduct: any) => {
-      
-    //   return newproduct.Product_ID === parseInt(product.product_id);
-    // });
-    // this.filteredObjects.push(...matchingProducts);
-    // }, (err:any)=>{
-    //   console.log("error from server", err)
-    // })
-
-  
-});
-
-interface Product {
-  Product_ID: number;
-  itemcount: number;
-}
-
-const tempObject: { [key: number]: boolean } = {};
-const uniqueProducts: Product[] = [];
-
-this.filteredObjects.forEach((item: Product) => {
-  const productId = item.Product_ID;
-  if (tempObject[productId]) {
-    const existingProduct = uniqueProducts.find((p) => p.Product_ID === productId);
-    if (existingProduct) {
-      existingProduct.itemcount += 1; 
-    }
-  } else {
-    tempObject[productId] = true;
-    item.itemcount = 1; 
-    uniqueProducts.push(item); 
+  private setQuantity(item: CartLine, qty: number) {
+    const previous = item.qty;
+    item.qty = qty; // optimistic
+    this.http.put('http://localhost:3000/updateCart', { product_id: item.Product_Id, quantity: qty }).subscribe({
+      error: (err: any) => {
+        item.qty = err?.error?.quantity ?? previous;
+        this.toast('error', err?.error?.message || "Couldn't update the quantity");
+      }
+    });
   }
-});
 
-this.filteredObjects = uniqueProducts; 
-
- this.newObject = this.filteredObjects.map((item: Product) => {
-  return {
-    productId: item.Product_ID,
-    count: item.itemcount
-  };
-});
-console.log("new object", this.newObject); 
-
-
-
-    this.orderedproducts=this.filteredObjects.map((obj:any)=> obj.Product_ID)
-    console.log("ordered products", this.orderedproducts);
-
-    if(this.length==0){
-        this.empty=true;
-    }
-    this.calculateTotal();
-
-    
-  }, (error: any) => {
-    console.log("error occurred");
-    console.log(error);
-  });
-
-  }
- 
-  remove(id:number){
-    
+  remove(id: string) {
     Swal.fire({
       title: 'Remove this item from your cart?',
       showCancelButton: true,
-      confirmButtonText: 'Yes',
-    
-    }).then((result) => {
-      if (result.isConfirmed) {
-    console.log("remove button clicked")
-    this.http.delete('http://localhost:3000/removeCart/'+id).subscribe((res: any) => {
-      console.log('product deleted from cart');
-      console.log(res)
-      
-      this.getCartProducts();
-      this.calculateTotal();
-      Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: res.message,
-        showConfirmButton: false,
-        timer: 1500
-      })
-   } ,(error: any) => {
-      console.log('error occured');
-      console.log(error);
-   });
-      }});
-
+      confirmButtonText: 'Remove',
+    }).then(result => {
+      if (!result.isConfirmed) { return; }
+      this.http.delete('http://localhost:3000/removeCart/' + id).subscribe({
+        next: (res: any) => {
+          this.items = this.items.filter(i => i.Product_Id !== id);
+          this.empty = this.items.length === 0;
+          this.toast('success', res.message);
+        },
+        error: (err: any) => this.toast('error', err?.error?.message || "Couldn't remove the item")
+      });
+    });
   }
 
-
-
-   ngOnInit(){
-
-    // this.route.queryParams.subscribe((params) => {
-    //   const userToken = params['userToken'];  
-    //   console.log('User Token:', userToken);
-    //   this.cookieValue = JSON.parse(userToken);
-    //   console.log(this.cookieValue);
-    // });
-    // this.productid=this.activatedroute.snapshot.paramMap.get('id');
-    // this.product=this.service.product.find(x=> x.Product_ID==this.productid)
-    // this.products=this.service.product;
-    // console.log(this.product)
-   
-   
-    this.getCartProducts();
-    
+  checkout() {
+    const overStock = this.items.find(i => i.qty > i.stock);
+    if (overStock) {
+      this.toast('error', `${overStock.Product_Name}: only ${overStock.stock} in stock`);
+      return;
+    }
+    const amount = this.total;
+    Swal.fire({
+      title: 'Go to payment?',
+      text: 'You will pay ₹' + amount.toLocaleString('en-IN') + ' through Razorpay.',
+      showCancelButton: true,
+      confirmButtonText: 'Continue to payment',
+    }).then(result => {
+      if (!result.isConfirmed) { return; }
+      const products = JSON.stringify(this.items.map(i => ({ productId: i.Product_Id, count: i.qty })));
+      const id = this.route.snapshot.paramMap.get('id');
+      const path = id ? ['login', 'products', 'buy', id, 'checkout'] : ['login', 'cart', 'checkout'];
+      this.router.navigate(path, { queryParams: { amount, products } });
+    });
   }
-clicked(){
-  this.display=false;
+
+  private toast(icon: 'success' | 'error' | 'info', title: string) {
+    Swal.fire({ position: 'top-end', icon, title, showConfirmButton: false, timer: 1500 });
+  }
 }
-  
- 
-}
-
-
-
-

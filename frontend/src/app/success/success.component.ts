@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit} from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Productservice } from '../service/products.service';
-import { ProductreduceService } from '../service/productreduce.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-success',
@@ -10,55 +8,34 @@ import { ProductreduceService } from '../service/productreduce.service';
   styleUrls: ['./success.component.css']
 })
 export class SuccessComponent implements OnInit {
-  amount:any;
-  paymentId:any;
+  amount: any;
+  paymentId: any;
   date: Date = new Date();
- day=this.date.getDate();
- month=this.date.getMonth();
- products:any;
- newp:any;
- data:any;
- filteredproducts:any;
-  year=this.date.getFullYear();
+  lines: { name: string; price: number; count: number }[] = [];
 
-  constructor(private router:Router,private service:Productservice, private route:ActivatedRoute, private http:HttpClient) { }
+  constructor(private route: ActivatedRoute, private http: HttpClient) {}
 
-  async SendRequest(data:any){
-   await this.http.put('http://localhost:3000/admin/reducequantity', data)
-  .subscribe((res:any)=>{
-     console.log(res)
-  }, (err:any)=>{
-      console.log("Error occured", err)
-  });
-  }
-  
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-       this.amount = params['amount'];
-        this.paymentId = params['paymentId'];
+    this.route.queryParams.subscribe(params => {
+      this.amount = params['amount'];
+      this.paymentId = params['paymentId'];
+      if (!this.paymentId) { return; }
+
+      // Stock is reduced by the server when the payment is saved, so this page
+      // only reads the order and is safe to reload.
+      this.http.get(`http://localhost:3000/getOrderedProducts?paymentId=${encodeURIComponent(this.paymentId)}`)
+        .subscribe({
+          next: (order: any) => {
+            if (order?.date) { this.date = new Date(order.date); }
+            if (order?.amount) { this.amount = order.amount; }
+            this.lines = (order?.products || []).map((p: any) => ({
+              name: p.name ?? p.Name ?? 'Product',
+              price: Number(p.price ?? p.Price) || 0,
+              count: Number(p.count) || 1
+            }));
+          },
+          error: (err: any) => console.log('error loading order', err)
+        });
     });
-    this.http.get(`http://localhost:3000/getOrderedProducts?paymentId=${this.paymentId}`)
-    .subscribe((res)=>{
-      this.products=Object.values(res);
-      this.newp=Object.values(this.products[0]);
-      this.SendRequest(this.newp)
-
-      console.log("newp",this.newp);
-      this.filteredproducts= this.products.filter((item:any)=> {
-       return  this.newp.some((element:any) => {
-          return item.Product_ID==element.productId;
-        }); 
-      })
-      console.log("filtered products",this.filteredproducts);
-      
-
-    }, (err)=>{
-      console.log("error in getting products");
-      console.log(err);
-    }
-    );
-
-  
-  
   }
 }

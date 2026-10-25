@@ -3,11 +3,11 @@
 <main class="es-main">
   <div class="es-container">
 
-    <ng-container *ngIf="!empty">
+    <ng-container *ngIf="!empty && !loading">
       <div class="es-page-head">
         <div>
           <h1>Your cart</h1>
-          <p>{{ length || 0 }} {{ length === 1 ? 'item' : 'items' }}</p>
+          <p>{{ itemCount }} {{ itemCount === 1 ? 'item' : 'items' }}</p>
         </div>
         <a class="es-btn es-btn-ghost" routerLink="/login/products">
           <i class="bi bi-arrow-left" aria-hidden="true"></i> Keep shopping
@@ -16,35 +16,38 @@
 
       <div class="es-cart">
         <section class="es-panel es-cart__list" aria-label="Items in cart">
-          <article class="es-line" *ngFor="let prod of filteredObjects">
+          <article class="es-line" *ngFor="let prod of items">
             <img class="es-line__img" [src]="prod.Product_Image" [alt]="prod.Product_Name">
 
             <div class="es-line__info">
               <h2>{{ prod.Product_Name }}</h2>
-              <p>₹{{ prod.Product_Price | number }} each</p>
+              <p>₹{{ prod.Product_Price | number }} each
+                <span class="es-line__stock" *ngIf="prod.stock <= 5 && prod.stock > 0">· only {{ prod.stock }} left</span>
+                <span class="es-line__stock" *ngIf="prod.stock <= 0">· now out of stock</span>
+              </p>
               <button type="button" class="es-btn es-btn-quiet es-line__remove" (click)="remove(prod.Product_Id)">
                 <i class="bi bi-trash3" aria-hidden="true"></i> Remove
               </button>
             </div>
 
-            <div class="es-stepper" aria-label="Quantity">
-              <button type="button" (click)="increment(prod)" aria-label="Decrease quantity">−</button>
-              <input type="number" min="1" name="quantity-{{ prod.Product_Id }}" [(ngModel)]="prod.Product_Quantity"
-                     (ngModelChange)="calculateTotal()" aria-label="Quantity">
-              <button type="button" (click)="decrement(prod)" aria-label="Increase quantity">+</button>
+            <div class="es-stepper" role="group" [attr.aria-label]="'Quantity of ' + prod.Product_Name">
+              <button type="button" (click)="decrease(prod)" [disabled]="prod.qty <= 1" aria-label="Decrease quantity">−</button>
+              <input type="number" min="1" [max]="prod.stock" [value]="prod.qty"
+                     (change)="onQuantityTyped(prod, $any($event.target).value)" aria-label="Quantity">
+              <button type="button" (click)="increase(prod)" [disabled]="prod.qty >= prod.stock" aria-label="Increase quantity">+</button>
             </div>
 
-            <strong class="es-line__total">₹{{ (prod.Product_Price * (prod.Product_Quantity || 1)) | number }}</strong>
+            <strong class="es-line__total">₹{{ (prod.Product_Price * prod.qty) | number }}</strong>
           </article>
         </section>
 
         <aside class="es-panel es-cart__summary" aria-label="Order summary">
           <h2>Summary</h2>
-          <div class="es-sum-row"><span>Subtotal</span><strong>₹{{ totalamount | number }}</strong></div>
-          <div class="es-sum-row"><span>Shipping</span><strong>₹50</strong></div>
-          <div class="es-sum-row es-sum-total"><span>Total <small>incl. GST</small></span><strong>₹{{ (aftership || 0) | number }}</strong></div>
+          <div class="es-sum-row"><span>Subtotal</span><strong>₹{{ subtotal | number }}</strong></div>
+          <div class="es-sum-row"><span>Shipping</span><strong>₹{{ shipping }}</strong></div>
+          <div class="es-sum-row es-sum-total"><span>Total <small>incl. GST</small></span><strong>₹{{ total | number }}</strong></div>
 
-          <button (click)="checkout(aftership)" type="button" class="es-btn es-btn-primary es-btn-lg es-btn-block">
+          <button (click)="checkout()" type="button" class="es-btn es-btn-primary es-btn-lg es-btn-block">
             Go to checkout
           </button>
           <p class="es-cart__secure"><i class="bi bi-shield-lock" aria-hidden="true"></i> Secure payment with Razorpay</p>

@@ -18,7 +18,7 @@
           </div>
           <div>
             <span class="es-order__label">Placed on</span>
-            <strong>{{ item.date }}</strong>
+            <strong>{{ item.date | date: 'd MMM y' }}</strong>
           </div>
           <div>
             <span class="es-order__label">Total</span>
@@ -32,16 +32,16 @@
 
         <div class="es-invoice" *ngIf="selectedOrder === item">
           <p class="es-invoice__to">Billed to <strong>{{ username || 'you' }}</strong></p>
-          <div class="es-sum-row" *ngFor="let b of item.products"><span>{{ b.Name }}</span><strong>₹{{ b.Price | number }}</strong></div>
+          <div class="es-sum-row" *ngFor="let b of item.products"><span>{{ b.name }} <small>× {{ b.count }}</small></span><strong>₹{{ (b.price * b.count) | number }}</strong></div>
           <div class="es-sum-row"><span>Shipping</span><strong>₹50</strong></div>
           <div class="es-sum-row es-sum-total"><span>Total paid</span><strong>₹{{ item.amount | number }}</strong></div>
         </div>
 
         <div class="es-order__item" *ngFor="let a of item.products">
-          <img [src]="a.Thumbnail" [alt]="a.Name">
+          <img [src]="a.image" [alt]="a.name">
           <div class="es-order__info">
-            <h2>{{ a.Name }}</h2>
-            <strong>₹{{ a.Price | number }}</strong>
+            <h2>{{ a.name }}</h2>
+            <span class="es-order__qty">₹{{ a.price | number }} × {{ a.count }}</span>
           </div>
           <a class="es-btn es-btn-ghost" routerLink="/login/products">Buy again</a>
         </div>

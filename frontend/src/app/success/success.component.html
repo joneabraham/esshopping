@@ -15,9 +15,9 @@
       </dl>
 
       <div class="es-receipt__items">
-        <div class="es-sum-row" *ngFor="let item of filteredproducts">
-          <span>{{ item.Name }} <small>× {{ item.itemcount || 1 }}</small></span>
-          <strong>₹{{ item.Price | number }}</strong>
+        <div class="es-sum-row" *ngFor="let item of lines">
+          <span>{{ item.name }} <small>× {{ item.count }}</small></span>
+          <strong>₹{{ (item.price * item.count) | number }}</strong>
         </div>
         <div class="es-sum-row"><span>Shipping</span><strong>₹50</strong></div>
         <div class="es-sum-row es-sum-total"><span>Total paid</span><strong>₹{{ amount | number }}</strong></div>

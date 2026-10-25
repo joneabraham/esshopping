@@ -94,18 +94,17 @@ export class ProductComponent implements DoCheck , OnInit {
         this.toastr.error("Product is not available");
       return;
     }   
-    this.http.post('http://localhost:3000/addToCart', {product_id:id} ) .subscribe((res:any)=>{
-       console.log("added to cart");
-  },(error:any)=>{
-      console.log("error occurred");
-  });
-
-
-
-    this.router.navigate(['login','products', 'buy', id]);
+    // Wait for the cart to update before opening it, so the new item is there.
+    this.http.post('http://localhost:3000/addToCart', { product_id: id }).subscribe({
+      next: () => this.router.navigate(['login', 'products', 'buy', id]),
+      error: (err: any) => {
+        this.toastr.error(err?.error?.message || "Couldn't add to cart");
+        // Already at the stock limit: the item is in the cart, so open it anyway.
+        if (err?.status === 400) { this.router.navigate(['login', 'products', 'buy', id]); }
+      }
+    });
   }
-   
-  
+
   details(id: number) {
     this.router.navigate(['login', 'products', 'details', id]);
   }

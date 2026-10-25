@@ -30,34 +30,24 @@ export class OrdersComponent implements OnInit {
    
     this.username=this.user.getUserName();
      this.http.get('http://localhost:3000/getAllOrderedProducts')
-     .subscribe((res)=>{
-      // console.log("response from server")
-       this.pr=Object.values(res);
-       
-        this.updatedProd = this.pr.map((item:any) => {
-        const filteredProducts = item.products.map((product:any) => {
-          const matchedProduct = this.pr.find(
-            (serviceProduct:any) => serviceProduct.Product_ID === product.productId
-          );
-      
-          return matchedProduct || product;
-        });
-      
-        return { ...item, products: filteredProducts };
-      });
-      console.log("updated products",this.updatedProd);  
-      this.newp=this.updatedProd.reverse();      
-      if(this.updatedProd.length===0){
-        this.showimg=true;
-        console.log("showimg",this.showimg);
-      }
-      //  this.newproducts=this.mapproducts.map((item:any)=>{
-      //      return{...item, products: this.mapproducts }
-      //  })
-      //  console.log("new products",this.newproducts);
-     },(err:any)=>{
-      console.log(err);
-      console.log("error in getting products")
-     })
+     .subscribe({
+       next: (res: any) => {
+         const orders: any[] = Object.values(res || {});
+         // Newer orders store {name, price, image, count}; older ones used {Name, Price, Thumbnail}.
+         this.newp = orders.map((order: any) => ({
+           ...order,
+           products: (order.products || []).map((p: any) => ({
+             name: p.name ?? p.Name ?? 'Product',
+             price: Number(p.price ?? p.Price) || 0,
+             image: p.image ?? p.Thumbnail ?? '',
+             count: Number(p.count) || 1
+           }))
+         })).reverse();
+         this.showimg = this.newp.length === 0;
+       },
+       error: (err: any) => {
+         console.log('error in getting orders', err);
+       }
+     });
    }
 }

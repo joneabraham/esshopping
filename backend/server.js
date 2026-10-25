@@ -66,32 +66,41 @@ app.post('/create_user', async(req, res) => {
  
 app.post('/payment', async (req, res) => {
   try {
-    const token = req.headers.authorization.split(' ')[1];
-    const decodedToken=jwt.verify(token, 'secretKey');
-    const user_id = decodedToken.userId;
-    const timeElapsed = Date.now();
-    const today = new Date(timeElapsed);
-    const date=today.toUTCString();
-    
-    console.log('User id:', user_id);
-    const { paymentId, products, amount } = req.body;
-    console.log('Payment id:', paymentId);
-    console.log('Amount:', amount);
-    console.log('Products:', products);
-    const Paymentdetails=new Payment({user_id, paymentId, products, amount, date});
-    await Paymentdetails.save();
+    const user_id = getUserId(req);
+    const date = new Date().toUTCString();
+    const { paymentId, amount } = req.body;
 
-    const user= await Cart.find({user_id});
-    if(!user){
-      console.log('No users found');
-      return res.status(400).json({message: "No users found"});
+    // Build the order from the saved cart, not from the browser, so quantities
+    // and prices can't drift from what's in the database.
+    const cartItems = await getMergedCart(user_id);
+    if (!cartItems.length) {
+      return res.status(400).json({ message: "Your cart is empty" });
     }
 
+    const products = [];
+    for (const item of cartItems) {
+      const product = await Product.findOne({ Product_Id: item.product_id });
+      if (!product) continue;
+      const count = item.quantity || 1;
+      products.push({
+        productId: product.Product_Id,
+        name: product.Product_Name,
+        price: Number(product.Product_Price) || 0,
+        image: product.Product_Image,
+        count
+      });
+      // Reduce stock once, here, at payment time.
+      product.Product_Quantity = Math.max(0, (Number(product.Product_Quantity) || 0) - count);
+      if (Number(product.Product_Quantity) <= 0) product.Product_Availbility = 'Not Available';
+      await product.save();
+    }
+
+    await new Payment({ user_id, paymentId, products, amount, date }).save();
     await Cart.deleteMany({ user_id });
 
-   
     res.status(200).json({ message: 'Payment successful' });
   } catch (error) {
+    console.log('Error saving payment:', error);
     res.status(500).json({ message: 'Error making payment' });
   }
 });
@@ -185,50 +194,122 @@ app.post('/checkwishlist', async(req, res) => {
   }
 });
 
-app.post('/addToCart', async (req, res) => {
-  try{ const {product_id} = req.body;
+// Cart helpers -------------------------------------------------------------
+
+function getUserId(req) {
   const token = req.headers.authorization.split(' ')[1];
-  const decodedToken=jwt.verify(token, 'secretKey');
-  const user_id = decodedToken.userId;
-  const newCart = new Cart({product_id, user_id});
-  newCart.save();
-  res.status(201).json({message: "Product added to cart successfully"});
-}catch(error){
-   console.log('Error adding product to cart:', error);
-   res.status(500).json({message: "Error adding product to cart"});
+  return jwt.verify(token, 'secretKey').userId;
 }
+
+// Older versions stored one cart document per click. Fold any duplicates for a
+// user into a single document per product so quantity lives in one place.
+async function getMergedCart(user_id) {
+  const docs = await Cart.find({ user_id });
+  const byProduct = new Map();
+  for (const doc of docs) {
+    const qty = doc.quantity || 1;
+    const existing = byProduct.get(doc.product_id);
+    if (!existing) {
+      byProduct.set(doc.product_id, doc);
+    } else {
+      existing.quantity = (existing.quantity || 1) + qty;
+      await existing.save();
+      await Cart.deleteOne({ _id: doc._id });
+    }
+  }
+  return [...byProduct.values()];
+}
+
+app.post('/addToCart', async (req, res) => {
+  try {
+    const { product_id } = req.body;
+    const user_id = getUserId(req);
+
+    const product = await Product.findOne({ Product_Id: product_id });
+    if (!product) {
+      return res.status(404).json({ message: "This product is no longer available" });
+    }
+    const stock = Number(product.Product_Quantity) || 0;
+
+    await getMergedCart(user_id);
+    const item = await Cart.findOne({ product_id, user_id });
+    const current = item ? (item.quantity || 1) : 0;
+
+    if (current + 1 > stock) {
+      return res.status(400).json({
+        message: stock <= 0 ? "This product is out of stock" : `Only ${stock} in stock, and they're all in your cart`
+      });
+    }
+
+    if (item) {
+      item.quantity = current + 1;
+      await item.save();
+      return res.status(200).json({ message: "Quantity updated in cart", quantity: item.quantity });
+    }
+
+    await new Cart({ product_id, user_id, quantity: 1 }).save();
+    res.status(201).json({ message: "Added to cart", quantity: 1 });
+  } catch (error) {
+    console.log('Error adding product to cart:', error);
+    res.status(500).json({ message: "Couldn't add to cart. Try again." });
+  }
+});
+
+app.put('/updateCart', async (req, res) => {
+  try {
+    const { product_id } = req.body;
+    const quantity = parseInt(req.body.quantity, 10);
+    const user_id = getUserId(req);
+
+    if (!Number.isInteger(quantity) || quantity < 1) {
+      return res.status(400).json({ message: "Quantity must be at least 1" });
+    }
+
+    const product = await Product.findOne({ Product_Id: product_id });
+    if (!product) {
+      return res.status(404).json({ message: "This product is no longer available" });
+    }
+    const stock = Number(product.Product_Quantity) || 0;
+    if (quantity > stock) {
+      return res.status(400).json({ message: `Only ${stock} in stock`, quantity: stock });
+    }
+
+    await getMergedCart(user_id);
+    const item = await Cart.findOneAndUpdate({ product_id, user_id }, { quantity }, { new: true });
+    if (!item) {
+      return res.status(404).json({ message: "This product isn't in your cart" });
+    }
+    res.json({ message: "Cart updated", quantity: item.quantity });
+  } catch (error) {
+    console.log('Error updating cart:', error);
+    res.status(500).json({ message: "Couldn't update the cart. Try again." });
+  }
 });
 
 app.get('/getCart', async (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];
-  const decodedToken=jwt.verify(token, 'secretKey');
-  const user_id = decodedToken.userId;
-  const products = await Cart.find({user_id})
-  if(!products){
-    console.log('No products found');
-    return res.status(400).json({message: "No products found"});
+  try {
+    const user_id = getUserId(req);
+    const items = await getMergedCart(user_id);
+    res.json(items);
+  } catch (error) {
+    console.log('Error getting cart:', error);
+    res.status(500).json({ message: "Couldn't load the cart" });
   }
-  res.json(products);
 });
 
 app.delete('/removeCart/:id', async (req, res) => {
   try {
     const product_id = req.params.id;
-    const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, 'secretKey');
-    const user_id = decodedToken.userId;
+    const user_id = getUserId(req);
 
-    const product = await Cart.findOneAndDelete({ product_id, user_id });
-
-    if (!product) {
-      console.log('No product found in the cart');
-      return res.status(400).json({ message: "No product found in the cart" });
+    const result = await Cart.deleteMany({ product_id, user_id });
+    if (!result.deletedCount) {
+      return res.status(400).json({ message: "This product isn't in your cart" });
     }
-
-    res.json({ message: "Product removed from cart successfully" });
+    res.json({ message: "Removed from cart" });
   } catch (error) {
     console.log('Error removing product from cart:', error);
-    res.status(500).json({ message: "Error removing product from cart" });
+    res.status(500).json({ message: "Couldn't remove the product. Try again." });
   }
 });
 
@@ -278,33 +359,18 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/getOrderedProducts', async (req, res) => {
-try{
-   let array=[  ];
-   const token=req.headers.authorization.split(' ')[1];
-   const decodedToken=jwt.verify(token, 'secretKey');
-   const user_id = decodedToken.userId;
-   const paymentId= req.query.paymentId;
-  //  console.log("paymentId", paymentId);
-   const order=await Payment.find({paymentId});
-   if(!order){
-    console.log("No order exists");
-    res.status(500).json({message:"No order exists"});
-   }
-   for(let i=0;i<order.length;i++){
-      // console.log("ordered products", order[i].products);
-      array.push(order[i].products);
-   }
-   
-   
-  // const orderedProducts=order[21].products;
-  // console.log("ordered products", orderedProducts);
-   res.status(200).json(array);
+  try {
+    const user_id = getUserId(req);
+    const order = await Payment.findOne({ paymentId: req.query.paymentId, user_id });
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    res.status(200).json(order);
+  } catch (error) {
+    console.log('Error getting ordered products:', error);
+    res.status(500).json({ message: "Error getting ordered products" });
   }
-  
-catch(error){
-  console.log('Error getting ordered products:', error);
-  res.status(500).json({message: "Error getting ordered products"});
-}});
+});
 
 app.get('/getAllOrderedProducts', async (req, res) => {
 try{
