@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Productservice } from '../service/products.service';
 import { HttpClient } from '@angular/common/http';
 import Swal from 'sweetalert2';
@@ -17,7 +17,8 @@ export class DetailsComponent implements OnInit{
   products:any;
   showwishlist:any;
   msg:string="";
-    constructor(private activatedroute:ActivatedRoute, private service:Productservice, private http:HttpClient) { }
+  tab:string='details';
+    constructor(private router:Router, private activatedroute:ActivatedRoute, private service:Productservice, private http:HttpClient) { }
 
     checkwishlist(){
       const requestBody = { id: this.productid };
@@ -54,9 +55,24 @@ export class DetailsComponent implements OnInit{
     }
 
     ngOnInit(): void {
-      this.getProduct();
-      this.checkwishlist();
+      this.activatedroute.paramMap.subscribe(() => {
+        this.tab = 'details';
+        this.getProduct();
+        this.checkwishlist();
+      });
+    }
 
+    get similar(): any[] {
+      if (!this.products || !this.newp) { return []; }
+      const others = this.products.filter((x: any) => x.Product_Id != this.newp.Product_Id);
+      const sameCategory = others.filter((x: any) => x.Product_Category === this.newp.Product_Category);
+      const rest = others.filter((x: any) => x.Product_Category !== this.newp.Product_Category);
+      return [...sameCategory, ...rest].slice(0, 4);
+    }
+
+    open(id: any) {
+      this.router.navigate(['login', 'products', 'details', id]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     clicked(){
       this.display=false;

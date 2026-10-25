@@ -23,10 +23,7 @@ export class SignupComponent  {
 
   constructor(private http: HttpClient, private toastr:ToastrService, private router:Router) {}
 
-  ngOnInit(): void {
-    setTimeout(() => {  
-      this.display=true;
-    },40000)};
+  ngOnInit(): void {}
 
 
   clicked (){
@@ -44,25 +41,25 @@ export class SignupComponent  {
       // this.msg = 'User created successfully';
 
       if(this.name.length==0 || this.email.length==0 || this.password.length==0 ){
-        this.msg='All fields are required';
+        this.msg='Fill in your name, email and password to continue.';
         this.display=true;
         return;
       }
   
       if (this.password !== this.npassword) {
-        this.msg='Password and confirm password should be the same';
+        this.msg='The two passwords don’t match. Type the same password in both fields.';
         this.display=true;
         return;
       }
   
       if (this.password.length < 6) {
-        this.msg='Password should be at least 6 characters';
+        this.msg='Use a password with at least 6 characters.';
         this.display=true;
         return;
       }
   
     }
-    this.display=true;
+    this.msg='';
     console.log('onSubmit method called');
     console.log('Name:', form.value.name);
     console.log('Email:', this.email);

@@ -1,230 +1,69 @@
 <app-header></app-header>
-<!-- content -->
-<section class="py-5">
-    <div class="container">
-      <div class="row gx-5">
-        <aside class="col-lg-6">
-          <div class="border rounded-4 mb-3 d-flex justify-content-center">
-            <a data-fslightbox="mygalley" class="rounded-4" target="_blank" data-type="image" href="https://bootstrap-ecommerce.com/bootstrap5-ecommerce/images/items/detail1/big.webp">
-              <img style="width: 400px; margin: auto;" class="rounded-4 fit" [src]="newp.Product_Image" />
-            </a>
-          </div>
-          
-        </aside>
-        <main class="col-lg-6">
-          <div class="ps-lg-3">
-            <div class="wish">
-            <h4 class="title text-dark">
-              {{newp.Product_Name}}
-            </h4>
-            <button *ngIf="!showwishlist" id="amd" class="btn " (click)="wishlist(newp.Product_Id)">
-                Wishlist
-                <i  class="bi bi-heart"></i>
-              </button>
-              <button *ngIf="showwishlist" id="amed" class="btn " (click)="wishlist(newp.Product_Id)">
-                Wishlisted
-                <i  class="bi bi-heart-fill" id="if"  style="color: red;"></i>
-              </button>
-            </div>
-            <div class="d-flex flex-row my-3">
-              <div class="text-warning mb-1 me-2">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fas fa-star-half-alt"></i>
-                <span class="ms-1">
-                  4.5
-                </span>
-              </div>
-              <span class="text"><i class="fas fa-shopping-basket fa-sm mx-1"></i>{{newp.Product_Quantity}} no's</span>
-              <span class="text-success ms-2">{{newp.Product_Quantity>0? 'In Stock':'Out of stock'}}</span>
-            </div>
-  
-            <div class="mb-3">
-              <span class="h5">{{newp.Product_Price}}</span>
-              <span class="text-muted">/per Item</span>
-            </div>
-  
-            <p>
-              {{newp.Product_Description}}
-            </p>
-  
-            <div class="row">
-              <dt class="col-3">Type:</dt>
-              <dd class="col-9">Regular</dd>
-  
-              <dt class="col-3">Color</dt>
-              <dd class="col-9">Brown</dd>
-  
-              <dt class="col-3">Category</dt>
-              <dd class="col-9">{{newp.Product_Category}}</dd>
-  
-              <dt class="col-3">Brand</dt>
-              <dd class="col-9">{{newp.Product_Brand}}</dd>
-            </div>
-  
-            <hr />
-  
-            <div class="row mb-4">
-              <div class="col-md-4 col-6">
-                <label class="mb-2">Size</label>
-                <select class="form-select border border-secondary" style="height: 35px;">
-                  <option>Small</option>
-                  <option>Medium</option>
-                  <option>Large</option>
-                </select>
-              </div>
-              <!-- col.// -->
-              
-            </div>
-            
-           
-              
-              
-            <button id="am" class="btn btn-primary shadow-0" [disabled]="product.Product_Quantity<=0" (click)="addCart()"> Add to cart </button>
-          </div>
-        </main>
-      </div>
-    </div>
-  </section>
-  <!-- content -->
-  
-  <section class="bg-light border-top py-4">
-    <div class="container">
-      <div class="row gx-4">
-        <div class="col-lg-8 mb-4">
-          <div class="border rounded-2 px-3 py-2 bg-white">
-            <!-- Pills navs -->
-            <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
-              <li class="nav-item d-flex" role="presentation">
-                <a class="nav-link d-flex align-items-center justify-content-center w-100 active" id="ex1-tab-1" data-mdb-toggle="pill"  role="tab" aria-controls="ex1-pills-1" aria-selected="true">Specification</a>
-              </li>
-              <li class="nav-item d-flex" role="presentation">
-                <a class="nav-link d-flex align-items-center justify-content-center w-100" id="ex1-tab-2" data-mdb-toggle="pill"  role="tab" aria-controls="ex1-pills-2" aria-selected="false">Warranty info</a>
-              </li>
-              <li class="nav-item d-flex" role="presentation">
-                <a class="nav-link d-flex align-items-center justify-content-center w-100" id="ex1-tab-3" data-mdb-toggle="pill"  role="tab" aria-controls="ex1-pills-3" aria-selected="false">Shipping info</a>
-              </li>
-              <li class="nav-item d-flex" role="presentation">
-                <a class="nav-link d-flex align-items-center justify-content-center w-100" id="ex1-tab-4" data-mdb-toggle="pill"  role="tab" aria-controls="ex1-pills-4" aria-selected="false">Seller profile</a>
-              </li>
-            </ul>
-            <!-- Pills navs -->
-  
-            <!-- Pills content -->
-            <div class="tab-content" id="ex1-content">
-              <div class="tab-pane fade show active" id="ex1-pills-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-                <p>
-                  With supporting text below as a natural lead-in to additional content. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                  enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                  pariatur.
-                </p>
-                <div class="row mb-2">
-                  <div class="col-12 col-md-6">
-                    <ul class="list-unstyled mb-0">
-                      <li><i class="fas fa-check text-success me-2"></i>Some great feature name here</li>
-                      <li><i class="fas fa-check text-success me-2"></i>Lorem ipsum dolor sit amet, consectetur</li>
-                      <li><i class="fas fa-check text-success me-2"></i>Duis aute irure dolor in reprehenderit</li>
-                      <li><i class="fas fa-check text-success me-2"></i>Optical heart sensor</li>
-                    </ul>
-                  </div>
-                  <div class="col-12 col-md-6 mb-0">
-                    <ul class="list-unstyled">
-                      <li><i class="fas fa-check text-success me-2"></i>Easy fast and ver good</li>
-                      <li><i class="fas fa-check text-success me-2"></i>Some great feature name here</li>
-                      <li><i class="fas fa-check text-success me-2"></i>Modern style and design</li>
-                    </ul>
-                  </div>
-                </div>
-                
-              </div>
-              <div class="tab-pane fade mb-2" id="ex1-pills-2" role="tabpanel" aria-labelledby="ex1-tab-2">
-                Tab content or sample information now <br />
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-              </div>
-              <div class="tab-pane fade mb-2" id="ex1-pills-3" role="tabpanel" aria-labelledby="ex1-tab-3">
-                Another tab content or sample information now <br />
-                Dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                mollit anim id est laborum.
-              </div>
-              <div class="tab-pane fade mb-2" id="ex1-pills-4" role="tabpanel" aria-labelledby="ex1-tab-4">
-                Some other tab content or sample information now <br />
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-                aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-                officia deserunt mollit anim id est laborum.
-              </div>
-            </div>
-            <!-- Pills content -->
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="px-0 border rounded-2 shadow-0">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Similar items</h5>
-                <div class="d-flex mb-3">
-                  <a href="#" class="me-3">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaVUMxsZ5110dw9Tn2u1abCpm1FwQ5DzosgA&usqp=CAU" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                  </a>
-                  <div class="info">
-                    <a href="#" class="nav-link mb-1">
-                      Rucksack Backpack Large <br />
-                      Line Mounts
-                    </a>
-                    <strong class="text-dark"> $38.90</strong>
-                  </div>
-                </div>
-  
-                <div class="d-flex mb-3">
-                  <a href="#" class="me-3">
-                    <img src="data:image/jpeg;base64,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" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                  </a>
-                  <div class="info">
-                    <a href="#" class="nav-link mb-1">
-                      Summer New Men's Denim <br />
-                      Jeans Shorts
-                    </a>
-                    <strong class="text-dark"> $29.50</strong>
-                  </div>
-                </div>
-  
-                <div class="d-flex mb-3">
-                  <a href="#" class="me-3">
-                    <img src="https://5.imimg.com/data5/ANDROID/Default/2021/7/KU/YI/VT/44196072/product-jpeg.jpg" style="min-width: 96px; height: 96px;" class="img-md img-thumbnail" />
-                  </a>
-                  <div class="info">
-                    <a href="#" class="nav-link mb-1"> T-shirts with multiple colors, for men and lady </a>
-                    <strong class="text-dark"> $120.00</strong>
-                  </div>
-                </div>
-  
-                
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- <div *ngIf="display" class="modal show d-block" id="exampleModal"  role="dialog" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog " role="document">
-      <div class="modal-content">
-        <div class="modal-header  text-black">
-          <h5 class="modal-title" class="a">{{msg}}</h5>
-          <button type="button" class="close text-black" (click)="clicked()" >
-            <span aria-hidden="true">&times;</span>
+<main class="es-main">
+  <div class="es-container">
+    <nav class="es-crumbs" aria-label="Breadcrumb">
+      <a routerLink="/login/products">Products</a>
+      <i class="bi bi-chevron-right" aria-hidden="true"></i>
+      <span *ngIf="newp">{{ newp.Product_Category || 'Product' }}</span>
+    </nav>
+
+    <div class="es-pd" *ngIf="newp">
+      <div class="es-pd__media">
+        <img [src]="newp.Product_Image" [alt]="newp.Product_Name">
+        <span class="es-tag es-tag-sale es-pd__tag" *ngIf="newp.Product_Discount > 0">{{ newp.Product_Discount }}% off</span>
+      </div>
+
+      <div class="es-pd__info">
+        <p class="es-pd__brand" *ngIf="newp.Product_Brand">{{ newp.Product_Brand }}</p>
+        <h1>{{ newp.Product_Name }}</h1>
+
+        <div class="es-pd__price">
+          <span>₹{{ newp.Product_Price | number }}</span>
+          <small>per item, incl. GST</small>
+        </div>
+
+        <span *ngIf="newp.Product_Quantity > 0" class="es-pill es-pill-ok es-pill-dot">In stock, {{ newp.Product_Quantity }} left</span>
+        <span *ngIf="newp.Product_Quantity <= 0" class="es-pill es-pill-bad es-pill-dot">Out of stock</span>
+
+        <p class="es-pd__desc" *ngIf="newp.Product_Description">{{ newp.Product_Description }}</p>
+
+        <div class="es-pd__actions">
+          <button class="es-btn es-btn-primary es-btn-lg" type="button"
+                  [disabled]="newp.Product_Quantity <= 0" (click)="addCart()">
+            <i class="bi bi-bag-plus" aria-hidden="true"></i> Add to cart
+          </button>
+          <button class="es-btn es-btn-ghost es-btn-lg es-wish" type="button" [class.is-on]="showwishlist"
+                  (click)="wishlist(newp.Product_Id)" [attr.aria-pressed]="!!showwishlist">
+            <i class="bi" [class.bi-heart]="!showwishlist" [class.bi-heart-fill]="showwishlist" aria-hidden="true"></i>
+            {{ showwishlist ? 'Saved to wishlist' : 'Save to wishlist' }}
           </button>
         </div>
-       
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="btn"  (click)="clicked()" >Close</button>
-        </div>
+
+        <dl class="es-pd__specs">
+          <div><dt>Category</dt><dd>{{ newp.Product_Category || '—' }}</dd></div>
+          <div><dt>Brand</dt><dd>{{ newp.Product_Brand || '—' }}</dd></div>
+          <div><dt>Delivery</dt><dd>₹50 flat shipping</dd></div>
+        </dl>
       </div>
     </div>
-  </div> -->
+
+    <section class="es-pd__note" *ngIf="newp">
+      <i class="bi bi-truck" aria-hidden="true"></i>
+      <p><strong>Delivery &amp; payment.</strong> Orders ship from Kochi with a flat ₹50 shipping charge. Pay by card, UPI or net banking through Razorpay, and find the invoice in Orders once payment goes through.</p>
+    </section>
+
+    <section class="es-similar" *ngIf="similar.length">
+      <h2>You might also like</h2>
+      <div class="es-similar__row">
+        <button class="es-similar__item" type="button" *ngFor="let p of similar" (click)="open(p.Product_Id)">
+          <img [src]="p.Product_Image" [alt]="p.Product_Name" loading="lazy">
+          <span class="es-similar__name">{{ p.Product_Name }}</span>
+          <strong>₹{{ p.Product_Price | number }}</strong>
+        </button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<app-footer></app-footer>

@@ -1,80 +1,61 @@
-<!-- <div class="custom-margin " >
-    <div class="d-flex" *ngIf="!buttonClicked" >
-        <div class="text">
-            <h1 id="d" class="mt-5  me-auto">Better Your <br><span class="fw-bold text-primary">E-Commerce</span> </h1>
-        <h4 id="heading" class="text-#ed7014 p-1" >Easier for you</h4>
-        <p class="mt-2" appClickevent > Get all the items necessary within a span of click! </p>
-        <button id="btn" class="btn p-2"  (click)="buttonClicked = !buttonClicked">
-            {{button}}
-        </button>
-        </div>
-        
-        <img id="img" class=" img-fluid w-50  mt-5  rounded-5 mx-auto " src="assets/b.jpg"/> -->
-         
-        
-        <!-- <app-test (emitsearch)="onvalue($event)"></app-test> -->
-        <!-- <p>You have entered {{searchn}}</p> -->
-        <!-- <app-test ></app-test> -->
-    <!-- </div>
-    <ng-container *ngIf="buttonClicked">
-        <app-product [newsearcha]="search"></app-product>
-    </ng-container>
-     -->
-        <!-- <div>
-        <button (click)="hiClicked()"> Hi </button>
-        <div *appIfcase="hi">
-            <h6> Hello </h6>
-        </div>    
-        </div> -->
-<!-- 
-</div> -->
-<div  >
 <app-header></app-header>
-<div class="custom-margin  " @fadeIn id="maindiv" >
-    <div class="d-flex"  >
-        <div class="text ">
-            <div class="p-0" >
-                <h1 id="d" class="mt-5  me-auto">Better Your </h1><br>
-            <h1 id="a" class=" fw-bold text-primary ">E-Commerce </h1>
-            </div>
-            
-        <h4 id="heading" class="text-#ed7014 " >Easier for you</h4>
-        <p class="mt-2" appClickevent > Get all the items necessary within a span of click! </p>
-        <button id="btn" class="btn "  routerLink="/login/products">
-            {{button}}
-        </button>
-        </div>
-        
-        <img id="img" class=" img-fluid animated w-50  mt-5  rounded-5 mx-auto "  src="assets/b.jpg" />
-</div>
-<section id="about" class="about" >
-    <div class="container"  @fadeInUp>
 
-      <div class="section-title">
-        <h2>About Us</h2>
-      </div>
-
-      <div class="row content">
-        <div class="col-lg-6">
-          <p>
-            Welcome to our e-shopping page! We are a passionate team dedicated to providing you with an exceptional online shopping experience.
-          </p>
-          <ul>
-            <li><i class="ri-check-double-line"></i> At our e-shopping store, we strive to bring you a wide range of high-quality products from various categories, including fashion, electronics, home decor, beauty, and more.</li>
-            <li><i class="ri-check-double-line"></i> We believe in the power of convenience, and that's why we've designed our website to be user-friendly and intuitive. </li>
-            <li><i class="ri-check-double-line"></i>Customer satisfaction is our top priority. Our dedicated support team is always ready to assist you with any inquiries, concerns, or feedback you may have</li>
-          </ul>
-        </div>
-        <div class="col-lg-6 pt-4 pt-lg-0">
-          <p>
-            Join our e-shopping community today and discover a world of convenience, quality, and style. Thank you for choosing us as your preferred online shopping destination. Happy shopping!"
-          </p>
-          <a  class="btn-learn-more">Learn More</a>
+<main @fadeIn>
+  <section class="es-hero">
+    <div class="es-container es-hero__grid">
+      <div class="es-hero__copy">
+        <h1>Everything for your week, one click away.</h1>
+        <p>Clothing, home and everyday essentials from one store. Add to cart, pay securely and track the order to your door.</p>
+        <div class="es-hero__cta">
+          <a class="es-btn es-btn-primary es-btn-lg" routerLink="/login/products">Start shopping</a>
+          <a class="es-btn es-btn-ghost es-btn-lg" routerLink="/signup">Create an account</a>
         </div>
       </div>
 
+      <figure class="es-hero__art">
+        <img src="assets/b.jpg" alt="A shopper browsing products on a laptop with bags beside her">
+        <span class="es-tag es-hero__tag">Shipped from Kochi</span>
+      </figure>
     </div>
   </section>
 
+  <section class="es-container es-perks" aria-label="Why shop with us">
+    <div class="es-perk">
+      <i class="bi bi-shield-check" aria-hidden="true"></i>
+      <div>
+        <h2>Secure checkout</h2>
+        <p>Pay with card, UPI or net banking through Razorpay.</p>
+      </div>
+    </div>
+    <div class="es-perk">
+      <i class="bi bi-truck" aria-hidden="true"></i>
+      <div>
+        <h2>Track every order</h2>
+        <p>See each purchase, its invoice and status in Orders.</p>
+      </div>
+    </div>
+    <div class="es-perk">
+      <i class="bi bi-heart" aria-hidden="true"></i>
+      <div>
+        <h2>Save for later</h2>
+        <p>Keep products in your wishlist and move them to cart anytime.</p>
+      </div>
+    </div>
+  </section>
 
-</div>
+  <section id="about" class="es-container" @fadeInUp>
+    <div class="es-about">
+      <div>
+        <h2>A small team running a careful store.</h2>
+        <a class="es-btn es-btn-accent" routerLink="/contact">Talk to us</a>
+      </div>
+      <div class="es-about__text">
+        <p>We pick a focused range across fashion, electronics, home decor and beauty, and list only what we can ship quickly.</p>
+        <p>The site is built to stay out of your way: find a product, check the details, and check out in a few steps.</p>
+        <p>Questions, returns or feedback go straight to our support team, and we reply within hours.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer></app-footer>

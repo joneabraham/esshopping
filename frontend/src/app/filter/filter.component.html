@@ -1,14 +1,10 @@
-<!-- <div class="form-group d-flex justify-content-end me-5 ">
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="allItems" value="All" [(ngModel)]="selectedbutton" (change)="onbuttonchanged()"  >
-      <label class="form-check-label" for="allItems">{{'All items ('+call+')'}}</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="available" value="Available" [(ngModel)]="selectedbutton" (change)="onbuttonchanged()">
-      <label class="form-check-label" for="available">{{'Available ('+avail+')'}}</label>
-    </div>
-    <div class="form-check form-check-inline">
-      <input class="form-check-input" type="radio" id="notavailable" value="Not Available"[(ngModel)]="selectedbutton" (change)="onbuttonchanged()">
-      <label class="form-check-label" for="notAvailable">{{'Not Available ('+notavail+')'}}</label>
-    </div>
-  </div> -->
+<div class="es-segment" role="radiogroup" aria-label="Filter by stock">
+  <input type="radio" id="f-all" name="stock" value="All" [(ngModel)]="selectedbutton" (change)="onbuttonchanged()">
+  <label for="f-all">All<span>{{ call }}</span></label>
+
+  <input type="radio" id="f-available" name="stock" value="Available" [(ngModel)]="selectedbutton" (change)="onbuttonchanged()">
+  <label for="f-available">In stock<span>{{ avail }}</span></label>
+
+  <input type="radio" id="f-unavailable" name="stock" value="Not Available" [(ngModel)]="selectedbutton" (change)="onbuttonchanged()">
+  <label for="f-unavailable">Out of stock<span>{{ notavail }}</span></label>
+</div>

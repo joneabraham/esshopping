@@ -38,8 +38,7 @@ export class ProductComponent implements DoCheck , OnInit {
   ngDoCheck() {
     this.newsearcha = this.searchService.getSearchValue();
     
-    this.sr=this.newsearcha
-    console.log(this.sr)
+    this.sr=(this.newsearcha || '').trim().toLowerCase();
   }
   // ngOnInit(): void {
   //   this.route.queryParams.subscribe((params) => {
@@ -129,6 +128,13 @@ export class ProductComponent implements DoCheck , OnInit {
   }
 
   itemcountradio: string = 'All';
+
+  visibleCount() {
+    return this.products.filter(item =>
+      (this.sr === '' || item.Product_Name.toLowerCase().includes(this.sr)) &&
+      (this.itemcountradio === 'All' || this.itemcountradio === item.Product_Availbility)
+    ).length;
+  }
 
   radiochanged(data: string) {
     this.itemcountradio = data;

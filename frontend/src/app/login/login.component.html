@@ -1,69 +1,36 @@
 <app-header></app-header>
-<section class="mt-5" style="background-color: #ffffff;">
-  <!-- <button id="btn" type="button" class="btn " routerLink="/home">Back</button> -->
 
-    <div class="container  h-100">
-      <div class="row d-flex justify-content-center align-items-center mt-1 h-100">
-        <div class="col col-xl-10">
-          <div class="card" style="border-radius: 1rem;">
-            <div class="row g-0">
-              <div class="col-md-6 col-lg-5 d-none d-md-block">
-                <img src="../../assets/login.png"
-                  alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
-              </div>
-              <div class="col-md-6 col-lg-7 d-flex align-items-center">
-                <div class="card-body p-4 p-lg-5 text-black">
-  
-                  <form #b="ngForm" (ngSubmit)="onsubmit(b)">
-  
-                    <div class="d-flex align-items-center mb-3 pb-1">
-                      <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
-                      <span class="h1 fw-bold mb-0">Eshopping</span>
-                    </div>
-  
-                    <h5 class="fw-normal mb-3 ms-3 pb-3" id="aa" style="letter-spacing: 1px;">Sign into your account</h5>
-  
-                    <div class="form-outline mb-4">
-                      <input type="email" placeholder="Enter your email"  class="fadeIn second" name="email" [(ngModel)]="email"  />
-                    </div>
-  
-                    <div class="form-outline mb-4">
-                      <input type="password"  placeholder="Enter your password" class="fadeIn third" name="password" [(ngModel)]="password"/>
-                    </div>
-  
-                    <div class="pt-1 mb-4">
-                      <button class="btn btn-dark btn-lg btn-block" id="btn" type="submit">Login</button>
-                    </div>
-  
-                    <a class="small text-muted" id="fg">Forgot password?</a>
-                    <p id="p" class="mt-5 pb-lg-2" style="color: #393f81;">Don't have an account? <a href="/signup"
-                        style="color: #393f81;">Register here</a></p>
-                    
-                  </form>
-  
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+<main class="es-auth">
+  <div class="es-container">
+    <div class="es-auth__card">
+      <form class="es-auth__form" #b="ngForm" (ngSubmit)="onsubmit(b)" novalidate>
+        <h1>Welcome back</h1>
+        <p>Log in to see your cart, wishlist and orders.</p>
 
-  <!-- <div  *ngIf="logindisplay" class="modal show d-block" id="exampleModal"  role="dialog" aria-labelledby="exampleModalLabel">
-    <div class="modal-dialog " role="document">
-      <div class="modal-content">
-        <div class="modal-header  text-black">
-          <h5 class="modal-title ms-3 mt-2" id="aa">{{msg}}</h5>
-          <button type="button" id="btnn" class="close text-black" (click)="clicked()" >
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-       
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" id="btn"  (click)="clicked()" >Close</button>
-        </div>
-      </div>
+        <label class="es-field">
+          <span>Email</span>
+          <input class="es-input" type="email" name="email" autocomplete="email" placeholder="you@example.com" [(ngModel)]="email">
+        </label>
+
+        <label class="es-field">
+          <span>Password</span>
+          <input class="es-input" type="password" name="password" autocomplete="current-password" placeholder="Your password" [(ngModel)]="password">
+        </label>
+
+        <button class="es-btn es-btn-primary es-btn-lg es-btn-block" type="submit">Log in</button>
+
+        <p class="es-auth__switch">New to Eshopping? <a routerLink="/signup">Create an account</a></p>
+      </form>
+
+      <aside class="es-auth__aside">
+        <span class="es-tag">Good to see you</span>
+        <h2>Pick up where you left off.</h2>
+        <ul>
+          <li><i class="bi bi-bag-check" aria-hidden="true"></i> Your cart is saved to your account</li>
+          <li><i class="bi bi-heart" aria-hidden="true"></i> Wishlist items wait for you</li>
+          <li><i class="bi bi-receipt" aria-hidden="true"></i> Invoices for every order</li>
+        </ul>
+      </aside>
     </div>
   </div>
-   -->
+</main>

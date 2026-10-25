@@ -35,12 +35,12 @@ export class ProductdetailsComponent implements OnInit, OnChanges {
   
   checkout(amount:any){
     const id = this.route.snapshot.paramMap.get('id'); 
-    confirm("Are you sure you want to checkout?");
     console.log("checkout button clicked")
     Swal.fire({
-      title: 'Are you sure you want to Checkout?',
+      title: 'Go to payment?',
+      text: 'You will pay ₹' + amount + ' through Razorpay.',
       showCancelButton: true,
-      confirmButtonText: 'Yes',
+      confirmButtonText: 'Continue to payment',
     
     }).then((result) => {
       if (result.isConfirmed) {
@@ -50,6 +50,7 @@ export class ProductdetailsComponent implements OnInit, OnChanges {
         amount: amount,
         products: JSON.stringify(this.newObject)
        }});
+       return;
     }
     this.router.navigate(['login','products', 'buy',id, 'checkout'], {
       queryParams: {
@@ -172,7 +173,7 @@ console.log("new object", this.newObject);
   remove(id:number){
     
     Swal.fire({
-      title: 'Are you sure you want to Remove product from cart?',
+      title: 'Remove this item from your cart?',
       showCancelButton: true,
       confirmButtonText: 'Yes',
     

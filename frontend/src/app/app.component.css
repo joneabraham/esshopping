@@ -1,49 +1,25 @@
-* {
-    caret-color: transparent;
-  }
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  background: var(--es-paper);
+}
 
-  .aaa{
-    display: flex;
-    justify-content:center ;
-  }
+/* A price tag that swings gently while the app boots */
+#preloader::before {
+  content: "";
+  width: 54px;
+  height: 30px;
+  background: var(--es-marigold);
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 14px 100%, 0 50%);
+  border-radius: 0 6px 6px 0;
+  transform-origin: 6px 50%;
+  animation: es-swing 0.9s ease-in-out infinite alternate;
+}
 
-
-  #preloader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9999;
-    overflow: hidden;
-    background: #37517e;
-  }
-  
-  #preloader:before {
-    content: "";
-    position: fixed;
-    top: calc(50% - 30px);
-    left: calc(50% - 30px);
-    border: 6px solid #37517e;
-    border-top-color: #fff;
-    border-bottom-color: #fff;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: animate-preloader 2s linear infinite;
-    transition: 1s;
-  }
-  
-  .hidden {
-    display: none;
-  }
-
-  @keyframes animate-preloader {
-    0% {
-      transform: rotate(0deg);
-    }
-  
-    100% {
-      transform: rotate(360deg);
-    }
-  }
+@keyframes es-swing {
+  from { transform: rotate(-14deg); }
+  to   { transform: rotate(14deg); }
+}

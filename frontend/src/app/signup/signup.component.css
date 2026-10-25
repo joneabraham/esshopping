@@ -1,17 +1,2 @@
-#btn{
-    margin-left: 15px;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    background-color:cadetblue;
-    width: 76px;
-    
-
-  }
-  #btn:hover{
-    color:white;
-    background-color: darkcyan;
-  }
-  #exampleModal{
-    margin-bottom: 10%;
-    justify-content: start;
-  }
+.es-auth__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+@media (max-width: 480px) { .es-auth__pair { grid-template-columns: 1fr; } }

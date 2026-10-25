@@ -1,115 +1,60 @@
- <app-header></app-header>
+<app-header></app-header>
 
-<section class="container-fluid p-4"  >
-  <div class="row">
-    <div class="col-lg-12 col-md-12 col-12">
-      <div class="border-bottom pb-3 mb-3">
-        
-      </div>
-    </div>
-  </div>
-  <div class="row ms-5"id="row" *ngIf="!showimg">
-    <div id="row" class="col-xxl-8 col-12">
-      <div class="card">
-        <div class="card-body">
-          <div class="mb-6">
-            <h4 class="mb-0 fw-bold">Your Order</h4>
-            <p class="mt-3">Check the status of recent orders, manage returns, and discover similar products.</p>
-          </div>
-        <div >
-          <div id="za" class="mb-8" *ngFor="let item of newp">
-            <div *ngIf="selectedOrder===item">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header border-bottom-0">
-                    <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close" (click)="close()"></button>
-                  </div>
-                  <div class="modal-body text-start text-black p-4">
-                    <h5 class="modal-title text-uppercase mb-5" id="exampleModalLabel">{{username}}</h5>
-                    <h4 class="mb-5" style="color: #35558a;">Thanks for your order</h4>
-                    <p class="mb-0" style="color: #35558a;">Payment summary</p>
-                    <hr class="mt-2 mb-4"
-                      style="height: 0; background-color: transparent; opacity: .75; border-top: 2px dashed #9e9e9e;">
-    
-                    <div class="d-flex justify-content-between" *ngFor="let b of item.products">
-                      <p class="fw-bold mb-0">{{b.Name}}</p>
-                      <p class="text-muted mb-0">Rs.{{b.Price}}</p>
-                    </div>
-    
-                    <div class="d-flex justify-content-between">
-                      <p class="small mb-0 fw-bold" >Shipping</p>
-                      <p class="small mb-0 text-muted">Rs 50</p>
-                    </div>
-    
-  
-    
-                    <div class="d-flex justify-content-between">
-                      <p class="fw-bold">Total</p>
-                      <p class="fw-bold" style="color: #000000;">{{item.amount}}</p>
-                    </div>
-    
-                  </div>
-                  <div class="modal-footer d-flex justify-content-center border-top-0 py-4">
-                    <button type="button" class="btn btn-primary btn-lg mb-1" style="background-color: #35558a;">
-                      Track your order
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div class="border-bottom mt-3 p-3 d-lg-flex align-items-center justify-content-between">
-              <div class=" align-items-center justify-content-between">
-                <h5 class="mb-0 " id="aa">Order ID {{item.paymentId}} </h5><br>
-                <span class="ms-2" id="ab">Ordered on {{item.date}}</span>
-              </div>
-              <div class="d-flex align-items-center justify-content-between">
-                <a id="ac" >Manage Order</a>
-                <button class="invd" (click)="clicked(item)">View Invoice</button>
-              </div>
-            </div>
-            <div id="z" class="row justify-content-between align-items-center" *ngFor="let a of item.products">
-
-
-             
-
-              <div class="col-lg-8 col-12">
-                <div class="d-md-flex">
-                  <div>
-                    <img [src]="a.Thumbnail" alt="" id="imgu" class="img-4by3-xl rounded">
-                  </div>
-                  <div class="ms-md-4 mt-2 mt-lg-0">
-                    <h5 id="mm" class="mb-1">
-                      {{a.Name}}
-                    </h5>
-                    <span id="vaa">Color: <span id="vaa" class="text-dark">Yellow</span>
-                    </span>
-                    <div class="mt-3">
-                      <h4>Rs {{a.Price}}</h4>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-3 col-12 d-grid">
-                <a id="btn" class="btn  mb-2" routerLink="/login/products">Buy again</a>
-                <a id="btna" class="btn btn-secondary" routerLink="/login/products">Shop similar</a>
-              </div>
-            </div>
-            </div>
-            
-          </div>
-          </div>
+<main class="es-main">
+  <div class="es-container es-orders">
+    <ng-container *ngIf="!showimg">
+      <div class="es-page-head">
+        <div>
+          <h1>Orders</h1>
+          <p>Every purchase you’ve made, newest first.</p>
         </div>
-        
-
-
-
-        
-
-
       </div>
+
+      <article class="es-panel es-order" *ngFor="let item of newp">
+        <header class="es-order__head">
+          <div>
+            <span class="es-order__label">Order</span>
+            <strong>{{ item.paymentId }}</strong>
+          </div>
+          <div>
+            <span class="es-order__label">Placed on</span>
+            <strong>{{ item.date }}</strong>
+          </div>
+          <div>
+            <span class="es-order__label">Total</span>
+            <strong>₹{{ item.amount | number }}</strong>
+          </div>
+          <button class="es-btn es-btn-ghost" type="button" (click)="selectedOrder === item ? close() : clicked(item)"
+                  [attr.aria-expanded]="selectedOrder === item">
+            <i class="bi bi-receipt" aria-hidden="true"></i> {{ selectedOrder === item ? 'Hide invoice' : 'View invoice' }}
+          </button>
+        </header>
+
+        <div class="es-invoice" *ngIf="selectedOrder === item">
+          <p class="es-invoice__to">Billed to <strong>{{ username || 'you' }}</strong></p>
+          <div class="es-sum-row" *ngFor="let b of item.products"><span>{{ b.Name }}</span><strong>₹{{ b.Price | number }}</strong></div>
+          <div class="es-sum-row"><span>Shipping</span><strong>₹50</strong></div>
+          <div class="es-sum-row es-sum-total"><span>Total paid</span><strong>₹{{ item.amount | number }}</strong></div>
+        </div>
+
+        <div class="es-order__item" *ngFor="let a of item.products">
+          <img [src]="a.Thumbnail" [alt]="a.Name">
+          <div class="es-order__info">
+            <h2>{{ a.Name }}</h2>
+            <strong>₹{{ a.Price | number }}</strong>
+          </div>
+          <a class="es-btn es-btn-ghost" routerLink="/login/products">Buy again</a>
+        </div>
+      </article>
+    </ng-container>
+
+    <div *ngIf="showimg" class="es-empty">
+      <img src="assets/No Order Found.jpg" alt="">
+      <h2>No orders yet</h2>
+      <p>When you complete a checkout, the order and its invoice will appear here.</p>
+      <a routerLink="/login/products" class="es-btn es-btn-primary es-btn-lg">Start shopping</a>
     </div>
-  </section>
-  <div  *ngIf="showimg">
-    <img id='ker'class="w-400 h-500" src="../../assets/No Order Found.jpg"/>
   </div>
+</main>
+
+<app-footer></app-footer>

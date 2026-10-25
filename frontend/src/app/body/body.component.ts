@@ -11,12 +11,12 @@ import * as AOS from 'aos';
   animations: [
     trigger('fadeIn', [
       transition('* => *', useAnimation(fadeIn, {
-        params: { timing: 4, delay: 0 }
+        params: { timing: 0.4, delay: 0 }
       }))
     ]),
     trigger('fadeInUp', [
       transition('* => *', useAnimation(fadeInUp, {
-        params: { timing: 8, delay: 10 }
+        params: { timing: 0.6, delay: 0.2 }
       }))
     ])
  ]

@@ -1,116 +1,49 @@
-<!-- 
-<div class="cart-wrap " *ngIf="!display">
-    <button id="btn" type="button" class="btn "  [appButtonstyle]="true" routerLink="/home">Back</button>
-
-    <div class="container">
-        <div class="row">
-            <div id="div" class="col-md-12 ms-5">
-                <h2 class="main-heading mt-10 ">My wishlist</h2>
-                <div class="table-wishlist">
-                    <table  cellpadding="6" cellspacing="2" width="100%">
-                        <thead>
-                            <tr id="tr" class="p-3  justify-content-center ">
-                                <th width="45%" ><h5 class="a">Product Name </h5></th>
-                                <th width="15%"><h5 class="a">Price</h5></th>
-                                <th width="15%"><h5 class="a">Stock Status</h5></th>
-                                
-                            </tr>
-                        </thead>
-                        <tbody *ngFor="let item of wishlist[0]">
-                            <tr class="a">
-                                <td  width="45%">
-                                    <div id="img" class="display-flex align-center p-4">
-                                            <img src="{{item.product_image}}"  class="img">
-                                            <h5 class="a">{{item.product_name}}</h5>
-                                        
-                                    </div>
-                                </td>
-                                <td width="15%" class="a">{{item.product_price}}</td>
-                                <td width="15%" ><span class="a" [ngStyle]="{color: item.product_available==='Available'? 'Green' : 'Red'}">{{item.product_available}}</span></td>
-                                <td width="15%"><button class="round-black-btn small-btn">Add to Cart</button></td>
-                                <td width="15%"><button (click)="remove(item.product_id)" class="btn btn-danger small-btn rounded-pill ">Remove</button></td>
-
-                               
-                            </tr>
-                            
-                          
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>  -->
-
-
-
-
 <app-header></app-header>
-<div *ngIf="!display" class="container">
-    <h1>My Wishlist</h1>
-    <div class="row">
-      <div class="col-12">
-        <table class="table table-image">
-          <thead>
-            <tr>
-              <th scope="col">S.No</th>
-              <th scope="col">Image</th>
-              <th scope="col">Product</th>
-              <th scope="col">Price</th>
-              <th scope="col">Stock</th>
-              <th scope="col"></th>
-              <th scope="col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of newwish; let i = index" class="trd">
-              <td class="aa" scope="row">{{ i + 1 }}</td>
-              <td class="w-25">
-                <img id="img" src="{{ item.product_image }}" class="img-fluid img-thumbnail" alt="Sheep">
-              </td>
-              <td class="aa" >{{ item.product_name }}</td>
-              <td class="aa" >{{ item.product_price }}</td>
-              <td class="aa" [ngStyle]="{ color: item.product_available === 'Available' ? 'green' : 'red' }">
-                {{ item.product_available }}
-              </td>
-              <td class="aa" width="15%">
-                <button class="btn btn-info small-btn rounded-pill" [disabled]="item.product_available!='Available'" (click)="add(item.product_id)">Add to Cart</button>
-              </td>
-              <td class="aa" width="15%">
-                <button (click)="remove(item.product_id)" class="btn btn-danger small-btn rounded-pill">Remove</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+
+<main class="es-main">
+  <div class="es-container">
+    <ng-container *ngIf="!display">
+      <div class="es-page-head">
+        <div>
+          <h1>Wishlist</h1>
+          <p *ngIf="newwish">{{ newwish.length }} saved {{ newwish.length === 1 ? 'product' : 'products' }}</p>
+        </div>
       </div>
+
+      <div class="es-wishgrid">
+        <article class="es-wishcard" *ngFor="let item of newwish">
+          <img [src]="item.product_image" [alt]="item.product_name">
+          <div class="es-wishcard__body">
+            <h2>{{ item.product_name }}</h2>
+            <div class="es-wishcard__meta">
+              <strong>₹{{ item.product_price | number }}</strong>
+              <span class="es-pill es-pill-dot"
+                    [class.es-pill-ok]="item.product_available === 'Available'"
+                    [class.es-pill-bad]="item.product_available !== 'Available'">
+                {{ item.product_available === 'Available' ? 'In stock' : 'Out of stock' }}
+              </span>
+            </div>
+            <div class="es-wishcard__actions">
+              <button class="es-btn es-btn-primary" type="button" [disabled]="item.product_available != 'Available'" (click)="add(item.product_id)">
+                <i class="bi bi-bag-plus" aria-hidden="true"></i> Add to cart
+              </button>
+              <button class="es-icon-btn es-wishcard__remove" type="button" (click)="remove(item.product_id)"
+                      [attr.aria-label]="'Remove ' + item.product_name + ' from wishlist'">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </ng-container>
+
+    <div *ngIf="display" class="es-empty">
+      <img src="assets/wish.jpg" alt="">
+      <h2>Your wishlist is empty</h2>
+      <p>Tap “Save to wishlist” on any product to keep it here for later.</p>
+      <a routerLink="/login/products" class="es-btn es-btn-primary es-btn-lg">Browse products</a>
     </div>
   </div>
+</main>
 
-
-  <div *ngIf="display" id="main" class="container-fluid ">
-    <div class="row">
-    
-       <div class="col-md-12">
-       
-               <div class="card">
-           <div class="card-header">
-           
-           </div>
-           <div class="card-body cart">
-                   <div class="col-sm-12 empty-cart-cls text-center " id="main">
-                       <img src="../../assets/wish.jpg" id="wish" class="img-fluid mb-4 mr-3">
-                       <h3><strong>Your Wishlist is Empty</strong></h3>
-                       <h4>Add something to make me happy :)</h4>
-                       <a routerLink="/login/products" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</a>
-                       
-                   
-                   </div>
-           </div>
-   </div>
-           
-       
-       </div>
-    
-    </div>
-   
-   </div>
+<app-footer></app-footer>

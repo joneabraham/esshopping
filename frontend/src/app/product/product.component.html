@@ -1,57 +1,52 @@
 <app-header></app-header>
-<div >
-  <div class="mt-5">
-    <app-filter (Buttonchanged)="radiochanged($event)"  [avail]="getavail()" [call]="getallitems()" [notavail]="getnot()"></app-filter>
 
-  </div>
-
-  
-  <div id="cardc" class="d-flex justify-content-center flex-wrap ms-1 p-1 " >
-    <div *ngFor="let item of products; let i = index"  id="st">
-    <!-- <div [appHighlight]="item.Price=== mostpricedproduct.Price"> -->
-    
-    <div *ngIf=" sr==='' || item.Product_Name.toLowerCase().includes(sr)">
-     <div >
-      <div id="cardp" class="card " style="width: 20rem; height: 30rem;" *ngIf="itemcountradio==='All' || itemcountradio===item.Product_Availbility" >
-        <div class="position-relative">
-          <div id="m"class="text-white bg-danger position-absolute top-0 end-0 p-2">{{item.Product_Discount}}%Off</div>
-          <img id="img" [src]="item.Product_Image" class="card-img-top img-fluid" alt="...">
-        </div>
-      
-        
-
-        <div class="card-body">
-          <h5 id="a" class="card-title">{{item.Product_Name}}</h5>
-          <h5 id="a" class="card-title">Rs {{item. Product_Price}}</h5>
-          <!-- <p class="card-text" [ngStyle]="{color: item.Product_Availbility==='Available'? 'Green' : 'Red'}">{{item.Product_Availbility}}-{{item.Product_Quantity}}</p> -->
-          <p class="card-text">
-            <ng-container *ngIf="item.Product_Quantity>0">
-              <span [ngStyle]="{ color: 'Green' }">{{ item.Product_Availbility>0 ? 'Not Available': 'Available' }} : {{ item.Product_Quantity }}</span>
-            </ng-container>
-            <ng-container *ngIf="item.Product_Quantity<=0">
-              <span [ngStyle]="{ color: 'Red' }">Not available</span>
-            </ng-container>
-          </p>
-         
-          <div class="d-flex ">
-            <a (click)="buy(item.Product_Id, item.Product_Quantity)" class="btn btn-primary me-auto">Buy Now</a>
-            <a (click)="details(item.Product_Id)" class="btn btn-secondary ms-auto"> Details</a>
-  
-          </div>
-        </div>
+<main class="es-main">
+  <div class="es-container">
+    <div class="es-page-head">
+      <div>
+        <h1>{{ sr ? 'Results for “' + newsearcha.trim() + '”' : 'All products' }}</h1>
+        <p>{{ visibleCount() }} {{ visibleCount() === 1 ? 'product' : 'products' }}</p>
       </div>
-    
-  </div>
-</div>
+      <app-filter (Buttonchanged)="radiochanged($event)" [avail]="getavail()" [call]="getallitems()" [notavail]="getnot()"></app-filter>
+    </div>
 
-</div>
-   <!-- <div class="d-flex justify-content-center   ">
-    <app-sample1></app-sample1>
-    <app-sample2></app-sample2>
-   </div> -->
-  </div>
-</div>
+    <div class="es-grid">
+      <ng-container *ngFor="let item of products">
+        <article class="es-card"
+                 *ngIf="(sr === '' || item.Product_Name.toLowerCase().includes(sr)) && (itemcountradio === 'All' || itemcountradio === item.Product_Availbility)"
+                 [class.is-out]="item.Product_Quantity <= 0">
+          <button class="es-card__media" type="button" (click)="details(item.Product_Id)"
+                  [attr.aria-label]="'View details for ' + item.Product_Name">
+            <img [src]="item.Product_Image" [alt]="item.Product_Name" loading="lazy">
+          </button>
+          <span class="es-tag es-tag-sale es-card__tag" *ngIf="item.Product_Discount > 0">{{ item.Product_Discount }}% off</span>
 
-<!-- <ng-template #appBodyTemplate>
-  <app-body></app-body>
-</ng-template> -->
+          <div class="es-card__body">
+            <h2 class="es-card__name">
+              <a (click)="details(item.Product_Id)" href="javascript:void(0)">{{ item.Product_Name }}</a>
+            </h2>
+            <div class="es-card__meta">
+              <span class="es-card__price">₹{{ item.Product_Price | number }}</span>
+              <span *ngIf="item.Product_Quantity > 0" class="es-pill es-pill-ok es-pill-dot">{{ item.Product_Quantity }} in stock</span>
+              <span *ngIf="item.Product_Quantity <= 0" class="es-pill es-pill-bad es-pill-dot">Out of stock</span>
+            </div>
+            <div class="es-card__actions">
+              <button class="es-btn es-btn-primary" type="button" [disabled]="item.Product_Quantity <= 0"
+                      (click)="buy(item.Product_Id, item.Product_Quantity)">
+                <i class="bi bi-bag-plus" aria-hidden="true"></i> Buy now
+              </button>
+              <button class="es-btn es-btn-ghost" type="button" (click)="details(item.Product_Id)">Details</button>
+            </div>
+          </div>
+        </article>
+      </ng-container>
+    </div>
+
+    <div class="es-empty" *ngIf="products.length && visibleCount() === 0">
+      <h2>No products match</h2>
+      <p>Try a different search term or switch the stock filter back to All.</p>
+    </div>
+  </div>
+</main>
+
+<app-footer></app-footer>

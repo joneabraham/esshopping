@@ -1,228 +1,64 @@
 <app-header></app-header>
-<section *ngIf="!empty" class="h-100 gradient-custom">
-  <div class="container py-5">
-    <div class="row d-flex justify-content-center my-4">
-      <div class="col-md-8">
-        <div class="card mb-4" >
-          <div class="card-header py-3 d-flex">
-           <h5 id="amm">Cart -{{ length }} items</h5>
-          </div>
-          <div class="card-body" id="bg" >
-            
-              <div class="row"  *ngFor="let prod of filteredObjects; let i=index" id="ab" >
-                <div class="col-lg-3 col-md-12 mb-4 mb-lg-0"  >
-                  <div
-                    class="bg-image hover-overlay hover-zoom ripple rounded"
-                    data-mdb-ripple-color="light"
-                  >
-                    <img
-                      src="{{ prod.Product_Image }}"
-                      class="w-100"
-                      alt="Blue Jeans Jacket"
-                    />
-                    <a href="#!">
-                      <div
-                        class="mask"
-                        style="background-color: rgba(251, 251, 251, 0.2)"
-                      ></div>
-                    </a>
-                  </div>
-                </div>
 
-                <div class="col-lg-5 col-md-6 mb-4 mb-lg-0" id="vt">
-                  <p>
-                    <strong>{{ prod.Product_Name }}</strong>
-                  </p>
-                  <p>Color: blue</p>
-                  <p>Size: M</p>
-                  <button
-                    type="button"
-                    class="btn btn-primary btn-sm me-1 mb-2"
-                    data-mdb-toggle="tooltip"
-                    title="Remove item"
-                  >
-                    <i class="fas fa-trash"></i>
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-danger btn-sm mb-2"
-                    data-mdb-toggle="tooltip"
-                    title="Move to the wish list"
-                  >
-                    <i class="fas fa-heart"></i>
-                  </button>
-                </div>
+<main class="es-main">
+  <div class="es-container">
 
-                <div class="col-lg-4 col-md-6 mb-4 mb-lg-0" id="vm">
-                  <div class="d-flex">
-                  <div class="d-flex mb-4" style="max-width: 300px">
-                    <button
-                      class="btn btn-primary px-3 me-2"
-                      onclick="this.parentNode.querySelector('input[type=number]').stepDown()"
-                      (click)="increment(prod)"
-                    >
-                      <i class="fas fa-minus"></i> -
-                    </button>
-
-                    <div class="form-outline">
-                      <input
-                        id="form1"
-                        min="1"
-                        
-                        name="quantity"
-                        [(ngModel)]="prod.Product_Quantity"
-                        type="number"
-                        class="form-control"
-                      />
-                      <label class="form-label" for="form1">Quantity</label>
-                    </div>
-
-                    <button
-                      class="btn btn-primary px-3 ms-2"
-                      (click)="decrement(prod)"
-                      onclick="this.parentNode.querySelector('input[type=number]').stepUp()"
-                    >
-                      <i class="fas fa-plus"></i> +
-                    </button>
-                  </div>
-                  <button id="blah" type="button" class="btn btn-danger" (click)="remove(prod.Product_Id)">Remove</button>
-                </div>
-                  <p class="text-start text-md-center">
-                    <strong>Rs {{(prod.Product_Price) * (prod.Product_Quantity || 1) }}</strong>
-                  </p>
-                </div>
-              </div>
-          </div>
+    <ng-container *ngIf="!empty">
+      <div class="es-page-head">
+        <div>
+          <h1>Your cart</h1>
+          <p>{{ length || 0 }} {{ length === 1 ? 'item' : 'items' }}</p>
         </div>
-        <div class="card mb-4">
-          <div class="card-body">
-            <p><strong>Expected shipping delivery</strong></p>
-            <p class="mb-0">12.10.2023 - 14.10.2023</p>
-          </div>
-        </div>
-        <div class="card mb-4 mb-lg-0">
-          <div class="card-body">
-            <p><strong>We accept</strong></p>
-            <img
-              class="me-2"
-              width="45px"
-              src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
-              alt="Visa"
-            />
-            <img
-              class="me-2"
-              width="45px"
-              src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
-              alt="American Express"
-            />
-            <img
-              class="me-2"
-              width="45px"
-              src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
-              alt="Mastercard"
-            />
-          </div>
-        </div>
+        <a class="es-btn es-btn-ghost" routerLink="/login/products">
+          <i class="bi bi-arrow-left" aria-hidden="true"></i> Keep shopping
+        </a>
       </div>
-      <div class="col-md-4">
-        <div class="card mb-4">
-          <div class="card-header py-3">
-            <h5 class="a">Summary</h5>
-          </div>
-          <div class="card-body">
-            <ul class="list-group list-group-flush">
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0"
-              >
-                Products
-                <!-- <span>Rs {{ prod.Price }}</span> -->
-              </li>
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center px-0"
-              >
-                Shipping
-                <strong><span>Rs 50</span></strong>
-              </li>
-              <li
-                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3"
-              >
-                <div>
-                  <strong>Total amount</strong>
-                  <strong>
-                    <p class="mb-0">(including GST)</p>
-                  </strong>
-                </div>
-                <span
-                  ><strong>Rs {{ aftership }}</strong></span
-                >
-              </li>
-            </ul>
 
-            <button (click)="checkout(aftership)" type="button" class="btn btn-primary btn-lg btn-block">
-              Go to checkout
-            </button>
-          </div>
-        </div>
+      <div class="es-cart">
+        <section class="es-panel es-cart__list" aria-label="Items in cart">
+          <article class="es-line" *ngFor="let prod of filteredObjects">
+            <img class="es-line__img" [src]="prod.Product_Image" [alt]="prod.Product_Name">
+
+            <div class="es-line__info">
+              <h2>{{ prod.Product_Name }}</h2>
+              <p>₹{{ prod.Product_Price | number }} each</p>
+              <button type="button" class="es-btn es-btn-quiet es-line__remove" (click)="remove(prod.Product_Id)">
+                <i class="bi bi-trash3" aria-hidden="true"></i> Remove
+              </button>
+            </div>
+
+            <div class="es-stepper" aria-label="Quantity">
+              <button type="button" (click)="increment(prod)" aria-label="Decrease quantity">−</button>
+              <input type="number" min="1" name="quantity-{{ prod.Product_Id }}" [(ngModel)]="prod.Product_Quantity"
+                     (ngModelChange)="calculateTotal()" aria-label="Quantity">
+              <button type="button" (click)="decrement(prod)" aria-label="Increase quantity">+</button>
+            </div>
+
+            <strong class="es-line__total">₹{{ (prod.Product_Price * (prod.Product_Quantity || 1)) | number }}</strong>
+          </article>
+        </section>
+
+        <aside class="es-panel es-cart__summary" aria-label="Order summary">
+          <h2>Summary</h2>
+          <div class="es-sum-row"><span>Subtotal</span><strong>₹{{ totalamount | number }}</strong></div>
+          <div class="es-sum-row"><span>Shipping</span><strong>₹50</strong></div>
+          <div class="es-sum-row es-sum-total"><span>Total <small>incl. GST</small></span><strong>₹{{ (aftership || 0) | number }}</strong></div>
+
+          <button (click)="checkout(aftership)" type="button" class="es-btn es-btn-primary es-btn-lg es-btn-block">
+            Go to checkout
+          </button>
+          <p class="es-cart__secure"><i class="bi bi-shield-lock" aria-hidden="true"></i> Secure payment with Razorpay</p>
+        </aside>
       </div>
+    </ng-container>
+
+    <div *ngIf="empty" class="es-empty">
+      <img src="assets/cart.svg" alt="">
+      <h2>Your cart is empty</h2>
+      <p>Products you add will show up here, ready for checkout.</p>
+      <a routerLink="/login/products" class="es-btn es-btn-primary es-btn-lg">Browse products</a>
     </div>
   </div>
-</section>
+</main>
 
-<div
-  *ngIf="display"
-  class="modal show d-block"
-  id="exampleModal"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
->
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-black">
-        <h5 class="modal-title" class="a">{{ msg }}</h5>
-        <button type="button" class="close text-black" (click)="clicked()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-secondary"
-          id="btn"
-          (click)="clicked()"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<div *ngIf="empty" id="main" class="container-fluid ">
-  <div class="row">
-  
-     <div class="col-md-12">
-     
-             <div class="card">
-         <div class="card-header">
-         
-         </div>
-         <div class="card-body cart">
-                 <div class="col-sm-12 empty-cart-cls text-center " id="main">
-                     <img src="../../assets/cart.svg" id="cart" class="img-fluid mb-4 mr-3">
-                     <h3><strong>Your Cart is Empty</strong></h3>
-                     <h4>Add something to Purchase :</h4>
-                     <a routerLink="/login/products" class="btn btn-primary cart-btn-transform m-3" data-abc="true">continue shopping</a>
-                     
-                 
-                 </div>
-         </div>
- </div>
-         
-     
-     </div>
-  
-  </div>
- 
- </div>
+<app-footer></app-footer>

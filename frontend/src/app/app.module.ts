@@ -24,7 +24,6 @@ import { AuthGuard } from './service/auth.guard';
 import { TokenvalidationService } from './service/tokenvalidation.service';
 import { CookieService } from 'ngx-cookie-service';
 import { LoaderComponent } from './loader/loader.component';
-import { FooterComponent } from './footer/footer.component';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { SliderComponent } from './slider/slider.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
@@ -55,7 +54,6 @@ import { CounterEffects } from './store-ngrx/counter.effect';
     LoginComponent,
     ButtonstyleDirective,
     LoaderComponent,
-    FooterComponent,
     SliderComponent,
  
   ],

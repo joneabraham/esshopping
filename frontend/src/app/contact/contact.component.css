@@ -1,0 +1,15 @@
+.es-contact { display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; align-items: start; }
+.es-contact__intro h1 { font-size: clamp(2.2rem, 4.5vw, 3.4rem); font-weight: 800; letter-spacing: -0.04em; margin: 0 0 16px; }
+.es-contact__intro > p { color: var(--es-muted); font-size: 1.1rem; max-width: 44ch; margin: 0 0 32px; }
+.es-contact__list { list-style: none; padding: 0; margin: 0; }
+.es-contact__list li { display: flex; gap: 14px; padding: 14px 0; border-top: 1px solid var(--es-line); }
+.es-contact__list i { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: var(--es-indigo-soft); color: var(--es-indigo); flex: none; }
+.es-contact__list div { display: flex; flex-direction: column; }
+.es-contact__list strong { font-size: 0.85rem; color: var(--es-muted); font-weight: 500; }
+.es-contact__form { padding: 32px; }
+.es-contact__pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+@media (max-width: 860px) {
+  .es-contact { grid-template-columns: 1fr; gap: 32px; }
+  .es-contact__pair { grid-template-columns: 1fr; }
+  .es-contact__form { padding: 24px; }
+}

@@ -1,154 +1,42 @@
 <app-header></app-header>
-<!-- <html>
 
-    <head>
-      <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,400i,700,900&display=swap" rel="stylesheet">
-    </head>
-      <style>
-        body {
-          text-align: center;
-          padding: 40px 0;
-          background: #EBF0F5;
-        }
-          h1 {
-            color: #099929;
-            font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
-            font-weight: 900;
-            font-size: 40px;
-            margin-bottom: 10px;
-          }
-          p {
-            color: #404F5E;
-            font-family: "Nunito Sans", "Helvetica Neue", sans-serif;
-            font-size:20px;
-            margin: 0;
-          }
-        i {
-          color: #9ABC66;
-          font-size: 100px;
-          line-height: 200px;
-          margin-left:-15px;
-        }
-        .card {
-          background: white;
-          padding: 60px;
-          height: 700px;
-          width: 70%;
-          border-radius: 14px;
-          box-shadow: 0 2px 3px #C8D0D8;
-          display: inline-block;
-          margin: 0 auto;
-        }
-        #imj{
-            width: 420px;
-            height: 330px;
-        }
-      </style>
-      <body>
-        <div class="card" >
-          <img id="im" src="../../assets/success.png"/>
-       
-          <p>We received your purchase request</p>
-          <p> Expected Product Delivery Date: 19-10-2023</p>
-          <p>Amount paid: {{amount}}</p>
-          <p>Payment id: {{paymentId}}</p>
-          
-          <img id="imj" src="https://cdn.dribbble.com/users/1801739/screenshots/14927640/media/123ed6cff14339d458c9223bd547b0fc.png?resize=800x600&vertical=center"/>
-         <div class="d-flex justify-content-center">
-          <button routerLink="/login/products" class="btn btn-primary">Back to Shopping</button>
-
-         </div>
-
-        </div>
-      </body>
-  </html> -->
-
-  <section class="h-100 h-custom" style="background-color: #eee;">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-lg-8 col-xl-6">
-          <div class="card border-top border-bottom border-3" style="border-color: #f37a27 !important;">
-            <div class="card-body p-5">
-  
-              <p class="lead fw-bold mb-5" style="color: #f37a27;">Purchase Reciept</p>
-  
-              <div class="row">
-                <div class="col mb-3">
-                  <p class="small text-muted mb-1">Date</p>
-                  <p>{{day}}-{{month}}-{{year}}</p>
-                </div>
-                <div class="col mb-3">
-                  <p class="small text-muted mb-1">Order No.</p>
-                  <p>{{paymentId}}</p>
-                </div>
-              </div>
-  
-              <div class="mx-n5 px-5 py-4" style="background-color: #f2f2f2;">
-                <div class="row" *ngFor="let item of filteredproducts">
-                  <div class="d-flex">
-                  <div class="col-md-8 col-lg-7">
-                    <p>{{item.Name}}</p>
-                  </div>
-                  <div class="col-md-2 col-lg-3">
-                    <p>Rs {{item.Price}}</p>
-                  </div>
-                  <div class="col-lg-4">
-                    <p>Count {{item.itemcount}}</p>
-                  </div>
-                </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-8 col-lg-7">
-                    <p class="mb-0">Shipping</p>
-                  </div>
-                  <div class="col-md-4 col-lg-3">
-                    <p class="mb-0">Rs. 50 </p>
-                  </div>
-                  
-                </div>
-              </div>
-  
-              <div class="row my-4">
-                <div class="col-md-4 offset-md-8 col-lg-3 offset-lg-9">
-                  <p class="lead fw-bold mb-0" style="color: #f37a27;">Total: {{amount}}</p>
-                </div>
-              </div>
-  
-              <p class="lead fw-bold mb-4 pb-2" style="color: #f37a27;">Tracking Order</p>
-  
-              <div class="row">
-                <div class="col-lg-12">
-  
-                  <div class="horizontal-timeline">
-  
-                    <ul class="list-inline items d-flex justify-content-between">
-                      <li class="list-inline-item items-list">
-                        <p class="py-1 px-2 rounded text-white" style="background-color: #f37a27;">Ordered
-                          </p>
-                      </li>
-                      <li class="list-inline-item items-list text-end" style="margin-right: 8px;">
-                        <p style="margin-right: -8px;">Shipped</p>
-                      </li>
-                      <li class="list-inline-item items-list text-end" style="margin-right: 8px;">
-                        <p style="margin-right: -8px;">On the way</p>
-                      </li>
-                      
-                      <li class="list-inline-item items-list text-end" style="margin-right: 8px;">
-                        <p style="margin-right: -8px;">Delivered</p>
-                      </li>
-                    </ul>
-  
-                  </div>
-  
-                </div>
-              </div>
-             <button routerLink="/login/products">Back to shopping</button>
-              <p class="mt-4 pt-2 mb-0">Want any help? <a routerLink="/home/contact" style="color: #f37a27;">Please contact
-                  us</a></p>
-  
-            </div>
-          </div>
-        </div>
+<main class="es-main">
+  <div class="es-container">
+    <section class="es-receipt es-panel">
+      <div class="es-receipt__head">
+        <span class="es-receipt__check" aria-hidden="true"><i class="bi bi-check-lg"></i></span>
+        <h1>Order placed</h1>
+        <p>Thanks for shopping with us. A copy of this receipt is saved in Orders.</p>
       </div>
-    </div>
-  </section>
+
+      <dl class="es-receipt__meta">
+        <div><dt>Date</dt><dd>{{ date | date: 'd MMM y' }}</dd></div>
+        <div><dt>Order number</dt><dd>{{ paymentId }}</dd></div>
+      </dl>
+
+      <div class="es-receipt__items">
+        <div class="es-sum-row" *ngFor="let item of filteredproducts">
+          <span>{{ item.Name }} <small>× {{ item.itemcount || 1 }}</small></span>
+          <strong>₹{{ item.Price | number }}</strong>
+        </div>
+        <div class="es-sum-row"><span>Shipping</span><strong>₹50</strong></div>
+        <div class="es-sum-row es-sum-total"><span>Total paid</span><strong>₹{{ amount | number }}</strong></div>
+      </div>
+
+      <ol class="es-track" aria-label="Delivery progress">
+        <li class="is-done">Ordered</li>
+        <li>Shipped</li>
+        <li>On the way</li>
+        <li>Delivered</li>
+      </ol>
+
+      <div class="es-receipt__actions">
+        <a class="es-btn es-btn-primary es-btn-lg" routerLink="/login/products">Continue shopping</a>
+        <a class="es-btn es-btn-ghost es-btn-lg" routerLink="/login/orders">View my orders</a>
+      </div>
+      <p class="es-receipt__help">Need help with this order? <a routerLink="/contact">Contact us</a></p>
+    </section>
+  </div>
+</main>
+
+<app-footer></app-footer>

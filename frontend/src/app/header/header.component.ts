@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 })
 export class HeaderComponent implements OnInit{
   show:any;
+  menuOpen:boolean=false;
   constructor(public headerid: HeaderidentifierService ,public name: UsernameService,public auth:LoggedinService, private search: SearchService, private router: Router, private toastr:ToastrService){}
    searchValue:string='';
    
@@ -42,15 +43,15 @@ export class HeaderComponent implements OnInit{
    }
    logout() {
     Swal.fire({
-      title: 'Are you sure you want to Logout?',
+      title: 'Log out of Eshopping?',
       showCancelButton: true,
-      confirmButtonText: 'Yes',
+      confirmButtonText: 'Log out',
     
     }).then((result) => {
       if (result.isConfirmed) {
         Swal.fire({
-          title: 'Logged out Successfully',
-          text: 'Please login to continue',
+          title: 'Logged out',
+          text: 'Log in again to keep shopping.',
           icon: 'success',
           timer: 3000,
           showConfirmButton: false
